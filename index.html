@@ -1,444 +1,287 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora Emprendedora & Generador Comercial</title>
-  <!-- Chart.js para gráficos -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- FontAwesome para íconos -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --bg: #0b0f19;
-      --card-bg: #151d2a;
-      --card-border: rgba(255, 255, 255, 0.08);
-      --accent: #38bdf8;
-      --accent-hover: #0284c7;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --input-bg: #0f172a;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      padding: 24px 16px;
-      display: flex;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 520px;
-      width: 100%;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    header h1 {
-      font-size: 1.75rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
-    }
-
-    header p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-      margin-bottom: 20px;
-    }
-
-    .card h2 {
-      font-size: 1.15rem;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text);
-    }
-
-    .card h2 i {
-      color: var(--accent);
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: 8px;
-      border: 1px solid #334155;
-      background: var(--input-bg);
-      color: var(--text);
-      font-size: 1rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
-    }
-
-    .presets-container {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-      margin-bottom: 14px;
-    }
-
-    .btn-preset {
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: var(--text-muted);
-      padding: 6px 10px;
-      font-size: 0.75rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-preset:hover, .btn-preset.active {
-      background: rgba(56, 189, 248, 0.15);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .btn-primary {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, var(--accent) 0%, #0284c7 100%);
-      color: #0f172a;
-      font-weight: 700;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: transform 0.1s, opacity 0.2s;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-primary:hover {
-      opacity: 0.95;
-    }
-
-    .btn-primary:active {
-      transform: scale(0.98);
-    }
-
-    .results-panel {
-      margin-top: 20px;
-      padding: 16px;
-      background: var(--input-bg);
-      border-radius: 12px;
-      border: 1px solid var(--card-border);
-    }
-
-    .result-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 0.95rem;
-    }
-
-    .result-row:last-child {
-      border-bottom: none;
-    }
-
-    .result-row.main {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--success);
-      padding-top: 12px;
-      margin-top: 4px;
-      border-top: 2px dashed rgba(255, 255, 255, 0.1);
-    }
-
-    .chart-box {
-      margin-top: 16px;
-      max-height: 200px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .ad-placeholder {
-      background: rgba(30, 41, 59, 0.5);
-      border: 1px dashed #334155;
-      color: var(--text-muted);
-      text-align: center;
-      padding: 16px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      margin-bottom: 20px;
-    }
-
-    .input-action-group {
-      display: flex;
-      gap: 8px;
-    }
-
-    .btn-icon {
-      padding: 12px;
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: var(--accent);
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .btn-icon:hover {
-      background: rgba(56, 189, 248, 0.15);
-    }
-
-    a.link-out {
-      color: var(--accent);
-      text-decoration: none;
-      word-break: break-all;
-      font-size: 0.85rem;
-    }
-
-    a.link-out:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-
-<div class="container">
-  <header>
-    <h1>Calculadora Emprendedora</h1>
-    <p>Optimizá tus costos, precios de venta y herramientas de comercialización</p>
-  </header>
-
-  <!-- Módulo 1: Calculadora de Precio -->
-  <div class="card">
-    <h2><i class="fa-solid fa-calculator"></i> Cálculo de Precio & Margen</h2>
-
-    <div class="form-group">
-      <label for="costo">Costo del Producto ($)</label>
-      <input type="number" id="costo" placeholder="Ej: 5000">
-    </div>
-
-    <div class="form-group">
-      <label>Comisión de Plataforma / Pasarela (%)</label>
-      <input type="number" id="comision" value="0" placeholder="Ej: 14">
-      <div class="presets-container">
-        <button class="btn-preset" onclick="setComision(14)">Mercado Libre (14%)</button>
-        <button class="btn-preset" onclick="setComision(6.5)">Mercado Pago (6.5%)</button>
-        <button class="btn-preset" onclick="setComision(3.5)">Tiendanube (3.5%)</button>
-        <button class="btn-preset" onclick="setComision(0)">Sin comisión</button>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="gastosExtra">Gastos de Envío o Embalaje ($)</label>
-      <input type="number" id="gastosExtra" value="0" placeholder="Ej: 500">
-    </div>
-
-    <div class="form-group">
-      <label for="margen">Margen de Ganancia Deseado (%)</label>
-      <input type="number" id="margen" value="30">
-    </div>
-
-    <button class="btn-primary" onclick="calcularPrecio()">
-      <i class="fa-solid fa-chart-line"></i> Calcular Precio Sugerido
-    </button>
-
-    <div class="results-panel" id="resPrecio" style="display:none;">
-      <div class="result-row">
-        <span>Costo Base:</span>
-        <span id="valCosto">$0.00</span>
-      </div>
-      <div class="result-row">
-        <span>Envío / Embalaje:</span>
-        <span id="valEnvio">$0.00</span>
-      </div>
-      <div class="result-row">
-        <span>Comisión de Venta:</span>
-        <span id="valMontoComision">$0.00</span>
-      </div>
-      <div class="result-row">
-        <span>Ganancia Neta:</span>
-        <span id="valGanancia" style="color: var(--accent); font-weight:700;">$0.00</span>
-      </div>
-      <div class="result-row main">
-        <span>Precio Sugerido:</span>
-        <span id="valPrecio">$0.00</span>
-      </div>
-
-      <div class="chart-box">
-        <canvas id="chartCostos"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <!-- Espacio para Anuncios AdSense -->
-  <div class="ad-placeholder">
-    <i class="fa-solid fa-rectangle-ad"></i> Espacio reservado para Banners de Publicidad (Google AdSense)
-  </div>
-
-  <!-- Módulo 2: Creador de Link WhatsApp -->
-  <div class="card">
-    <h2><i class="fa-brands fa-whatsapp"></i> Creador de Enlace para WhatsApp</h2>
-
-    <div class="form-group">
-      <label for="phone">Número de WhatsApp (con código de país sin +)</label>
-      <input type="text" id="phone" placeholder="Ej: 5492611234567">
-    </div>
-
-    <div class="form-group">
-      <label for="message">Mensaje Predeterminado</label>
-      <input type="text" id="message" placeholder="Ej: Hola! Quisiera consultar por un producto.">
-    </div>
-
-    <button class="btn-primary" onclick="generarLinkWS()">
-      <i class="fa-solid fa-link"></i> Generar Link Directo
-    </button>
-
-    <div class="results-panel" id="resWS" style="display:none; margin-top: 15px;">
-      <label>Tu enlace generado:</label>
-      <div class="input-action-group">
-        <input type="text" id="inputGeneratedLink" readonly>
-        <button class="btn-icon" onclick="copiarLinkWS()" title="Copiar enlace">
-          <i class="fa-regular fa-copy"></i>
-        </button>
-      </div>
-      <div style="margin-top: 10px;">
-        <a id="linkWS" href="#" target="_blank" class="link-out">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i> Probar enlace en ventana nueva
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  let chartInstance = null;
-
-  function setComision(val) {
-    document.getElementById('comision').value = val;
-  }
-
-  function calcularPrecio() {
-    const costo = parseFloat(document.getElementById('costo').value) || 0;
-    const comisionPct = parseFloat(document.getElementById('comision').value) || 0;
-    const gastosExtra = parseFloat(document.getElementById('gastosExtra').value) || 0;
-    const margenPct = parseFloat(document.getElementById('margen').value) || 0;
-
-    if (costo <= 0) return;
-
-    // Fórmula para calcular precio cubriendo costo, gastos, margen deseado y comisión porcentual
-    const margenDecimal = margenPct / 100;
-    const comisionDecimal = comisionPct / 100;
-
-    // Precio = (Costo + Gastos) * (1 + Margen) / (1 - Comisión)
-    const subtotal = (costo + gastosExtra) * (1 + margenDecimal);
-    const precioFinal = comisionDecimal < 1 ? subtotal / (1 - comisionDecimal) : subtotal;
-
-    const montoComision = precioFinal * comisionDecimal;
-    const ganancia = (precioFinal - montoComision) - costo - gastosExtra;
-
-    document.getElementById('valCosto').innerText = `$${costo.toFixed(2)}`;
-    document.getElementById('valEnvio').innerText = `$${gastosExtra.toFixed(2)}`;
-    document.getElementById('valMontoComision').innerText = `$${montoComision.toFixed(2)}`;
-    document.getElementById('valGanancia').innerText = `$${ganancia.toFixed(2)}`;
-    document.getElementById('valPrecio').innerText = `$${precioFinal.toFixed(2)}`;
-
-    document.getElementById('resPrecio').style.display = 'block';
-
-    // Renderizar o actualizar el gráfico
-    renderChart(costo, gastosExtra, montoComision, ganancia);
-  }
-
-  function renderChart(costo, envio, comision, ganancia) {
-    const ctx = document.getElementById('chartCostos').getContext('2d');
-
-    if (chartInstance) {
-      chartInstance.destroy();
-    }
-
-    chartInstance = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Costo Producto', 'Envío/Embalaje', 'Comisiones', 'Ganancia Neta'],
-        datasets: [{
-          data: [costo, envio, comision, ganancia],
-          backgroundColor: ['#e2e8f0', '#f59e0b', '#ef4444', '#10b981'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: { color: '#94a3b8', font: { size: 11 } }
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Emprendedora Pro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-      }
-    });
-  }
+        .card-bg {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+        }
+        .input-style {
+            background-color: #0f172a;
+            border: 1px solid #475569;
+            color: #f8fafc;
+        }
+        .input-style:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
 
-  function generarLinkWS() {
-    const phone = document.getElementById('phone').value.replace(/\D/g, '');
-    const message = encodeURIComponent(document.getElementById('message').value.trim());
+    <div class="max-w-6xl mx-auto space-y-6">
+        
+        <!-- Header -->
+        <header class="text-center py-4">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-blue-400 flex items-center justify-center gap-3">
+                <i class="fa-solid font-bold fa-calculator"></i> Calculadora Emprendedora Pro
+            </h1>
+            <p class="text-slate-400 text-sm md:text-base mt-1">Optimizá costos, márgenes, envíos y precios de venta</p>
+        </header>
 
-    if (!phone) return;
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-    const url = `https://wa.me/${phone}${message ? '?text=' + message : ''}`;
-    
-    document.getElementById('inputGeneratedLink').value = url;
-    document.getElementById('linkWS').href = url;
-    document.getElementById('resWS').style.display = 'block';
-  }
+            <!-- Columna Izquierda: Formulario de Entrada -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-4">
+                    <h2 class="text-xl font-bold text-blue-300 flex items-center gap-2">
+                        <i class="fa-solid fa-box"></i> Costos Directos & Márgenes
+                    </h2>
 
-  function copiarLinkWS() {
-    const copyText = document.getElementById('inputGeneratedLink');
-    copyText.select();
-    navigator.clipboard.writeText(copyText.value);
-    alert('¡Enlace copiado al portapapeles!');
-  }
-</script>
+                    <!-- Costo Base -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Costo Unitario del Producto ($)</label>
+                        <input type="number" id="costoProducto" value="5000" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 5000" oninput="calcular()">
+                    </div>
 
+                    <!-- Comisiones -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Comisión de Pasarela / Plataforma (%)</label>
+                        <input type="number" id="comisionPlataforma" value="0" class="w-full p-3 rounded-xl input-style mb-2" placeholder="Ej: 14" oninput="calcular()">
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="setComision(14)" class="text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Mercado Libre (14%)</button>
+                            <button onclick="setComision(6.5)" class="text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Mercado Pago (6.5%)</button>
+                            <button onclick="setComision(3.5)" class="text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Tiendanube (3.5%)</button>
+                            <button onclick="setComision(0)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-400 py-1.5 px-3 rounded-lg border border-slate-700 transition">Sin comisión</button>
+                        </div>
+                    </div>
+
+                    <!-- Envíos / Embalaje -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Gastos de Envío o Embalaje ($)</label>
+                        <input type="number" id="gastosEnvio" value="0" class="w-full p-3 rounded-xl input-style mb-2" placeholder="Ej: 800" oninput="calcular()">
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="setEnvio(500)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Bolsa/Caja ($500)</button>
+                            <button onclick="setEnvio(1500)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Moto Local ($1500)</button>
+                            <button onclick="setEnvio(4500)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Correo Nacional ($4500)</button>
+                        </div>
+                    </div>
+
+                    <!-- Margen Deseado -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Margen de Ganancia Deseado (%)</label>
+                        <input type="number" id="margenDeseado" value="40" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 40" oninput="calcular()">
+                    </div>
+                </div>
+
+                <!-- Modulo Costos Fijos Mensuales -->
+                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-4">
+                    <h2 class="text-xl font-bold text-amber-400 flex items-center gap-2">
+                        <i class="fa-solid fa-calculator"></i> Prorrateo de Costos Fijos (Opcional)
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">Costos Fijos Mensuales ($)</label>
+                            <input type="number" id="costosFijosMensuales" value="0" class="w-full p-3 rounded-xl input-style" placeholder="Alquiler, luz, web..." oninput="calcular()">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">Ventas Est. por Mes (Unidades)</label>
+                            <input type="number" id="ventasEstimadas" value="1" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 50" oninput="calcular()">
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400">Incidencia por unidad: <span id="incidenciaFijos" class="font-bold text-amber-300">$0.00</span></p>
+                </div>
+
+            </div>
+
+            <!-- Columna Derecha: Resultados y Análisis -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- Resultados Principales -->
+                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-4">
+                    <h2 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line"></i> Resumen de Venta
+                    </h2>
+
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 text-center">
+                        <span class="text-xs text-slate-400 uppercase tracking-wider">Precio de Venta Sugerido</span>
+                        <div class="text-4xl font-extrabold text-emerald-400 mt-1" id="resPrecioVenta">$0.00</div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div id="cardGanancia" class="p-3 rounded-xl border bg-slate-900/50 border-slate-700">
+                            <span class="text-xs text-slate-400">Ganancia Neta</span>
+                            <div class="text-lg font-bold text-emerald-400" id="resGananciaNeta">$0.00</div>
+                        </div>
+                        <div class="p-3 rounded-xl border bg-slate-900/50 border-slate-700">
+                            <span class="text-xs text-slate-400">Costo Total Inc.</span>
+                            <div class="text-lg font-bold text-red-400" id="resCostoTotal">$0.00</div>
+                        </div>
+                    </div>
+
+                    <!-- Simulador de Descuentos -->
+                    <div class="pt-2 border-t border-slate-700">
+                        <label class="block text-xs text-slate-400 mb-1">Simular Promoción / Descuento (%)</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="descSimulado" value="10" class="p-2 rounded-lg input-style text-sm w-24" oninput="calcular()">
+                            <div class="flex-1 text-right text-xs self-center">
+                                <span class="text-slate-400">Precio Promo:</span> 
+                                <strong id="resPrecioPromo" class="text-blue-300 block text-sm">$0.00</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="copiarResumen()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 font-bold rounded-xl transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-copy"></i> Copiar Resumen para WhatsApp
+                    </button>
+                </div>
+
+                <!-- Gráfico de Desglose -->
+                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-3">
+                    <h3 class="text-md font-bold text-slate-300 text-center">Desglose del Precio de Venta</h3>
+                    <div class="relative w-full h-48 flex justify-center">
+                        <canvas id="graficoDesglose"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let chart;
+
+        function calcular() {
+            // Entradas
+            const costoProd = parseFloat(document.getElementById('costoProducto').value) || 0;
+            const comisionPct = parseFloat(document.getElementById('comisionPlataforma').value) || 0;
+            const envio = parseFloat(document.getElementById('gastosEnvio').value) || 0;
+            const margenPct = parseFloat(document.getElementById('margenDeseado').value) || 0;
+
+            const fijosMensuales = parseFloat(document.getElementById('costosFijosMensuales').value) || 0;
+            const ventasMensuales = Math.max(1, parseFloat(document.getElementById('ventasEstimadas').value) || 1);
+
+            // Prorrateo de Fijos
+            const fijosPorUnidad = fijosMensuales / ventasMensuales;
+            document.getElementById('incidenciaFijos').innerText = `$${fijosPorUnidad.toFixed(2)}`;
+
+            // Costo Base Acumulado
+            const costoBaseTotal = costoProd + envio + fijosPorUnidad;
+
+            // Fórmula Precio de Venta para garantizar el margen deseado post comisiones
+            // Precio = CostoTotal / (1 - (Comision% + Margen%)/100)
+            const divisor = 1 - ((comisionPct + margenPct) / 100);
+            
+            let precioVenta = 0;
+            if (divisor > 0) {
+                precioVenta = costoBaseTotal / divisor;
+            } else {
+                precioVenta = costoBaseTotal * 2; // Resguardo en caso de porcentaje irreal
+            }
+
+            const comisionMonto = precioVenta * (comisionPct / 100);
+            const gananciaNeta = precioVenta - costoBaseTotal - comisionMonto;
+
+            // Promoción / Descuento
+            const descPct = parseFloat(document.getElementById('descSimulado').value) || 0;
+            const precioPromo = precioVenta * (1 - (descPct / 100));
+
+            // Renderizar Resultados
+            document.getElementById('resPrecioVenta').innerText = `$${precioVenta.toFixed(2)}`;
+            document.getElementById('resGananciaNeta').innerText = `$${gananciaNeta.toFixed(2)}`;
+            document.getElementById('resCostoTotal').innerText = `$${(costoBaseTotal + comisionMonto).toFixed(2)}`;
+            document.getElementById('resPrecioPromo').innerText = `$${precioPromo.toFixed(2)}`;
+
+            // Salud del Margen (Color indicador)
+            const cardGanancia = document.getElementById('cardGanancia');
+            if (margenPct < 15) {
+                cardGanancia.className = "p-3 rounded-xl border bg-red-950/40 border-red-800";
+            } else if (margenPct < 30) {
+                cardGanancia.className = "p-3 rounded-xl border bg-amber-950/40 border-amber-800";
+            } else {
+                cardGanancia.className = "p-3 rounded-xl border bg-emerald-950/40 border-emerald-800";
+            }
+
+            // Actualizar Gráfico
+            actualizarGrafico(costoProd, envio + fijosPorUnidad, comisionMonto, gananciaNeta);
+        }
+
+        function setComision(val) {
+            document.getElementById('comisionPlataforma').value = val;
+            calcular();
+        }
+
+        function setEnvio(val) {
+            document.getElementById('gastosEnvio').value = val;
+            calcular();
+        }
+
+        function actualizarGrafico(costo, enviosFijos, comision, ganancia) {
+            const ctx = document.getElementById('graficoDesglose').getContext('2d');
+            
+            if (chart) {
+                chart.destroy();
+            }
+
+            chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Costo Producto', 'Envío/Fijos', 'Comisiones', 'Ganancia Neta'],
+                    datasets: [{
+                        data: [
+                            Math.max(0, costo), 
+                            Math.max(0, enviosFijos), 
+                            Math.max(0, comision), 
+                            Math.max(0, ganancia)
+                        ],
+                        backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6', '#10b981'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#cbd5e1', boxWidth: 12, font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function copiarResumen() {
+            const precio = document.getElementById('resPrecioVenta').innerText;
+            const ganancia = document.getElementById('resGananciaNeta').innerText;
+            const promo = document.getElementById('resPrecioPromo').innerText;
+            
+            const texto = `📊 *Resumen de Cotización*\n• Precio Sugerido: ${precio}\n• Ganancia Neta: ${ganancia}\n• Precio con Promoción: ${promo}`;
+            
+            navigator.clipboard.writeText(texto).then(() => {
+                alert("¡Resumen copiado al portapapeles!");
+            });
+        }
+
+        // Ejecutar primer cálculo al cargar
+        window.onload = calcular;
+    </script>
 </body>
 </html>
