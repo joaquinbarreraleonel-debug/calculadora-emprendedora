@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Emprendedora Ultra</title>
+    <title>Calculadora Emprendedora Pro</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -18,7 +18,6 @@
         @media print {
             body { background: white !important; color: black !important; }
             .no-print { display: none !important; }
-            .print-only { display: block !important; }
             .card-bg { border: 1px solid #ccc !important; background: white !important; color: black !important; }
         }
     </style>
@@ -30,9 +29,9 @@
         <!-- Header -->
         <header class="text-center py-4 no-print">
             <h1 class="text-3xl md:text-5xl font-extrabold text-blue-400 flex items-center justify-center gap-3">
-                <i class="fa-solid fa-calculator"></i> Calculadora Emprendedora Ultra
+                <i class="fa-solid fa-calculator"></i> Calculadora Emprendedora Pro
             </h1>
-            <p class="text-slate-400 text-sm md:text-base mt-1">Gestión integral de costos, márgenes, punto de equilibrio y multicanal</p>
+            <p class="text-slate-400 text-sm md:text-base mt-1">Gestión integral de costos, márgenes, dólar en vivo y multicanal</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -40,7 +39,7 @@
             <!-- Columna Izquierda: Entradas -->
             <div class="lg:col-span-7 space-y-6 no-print">
                 
-                <!-- Costos Principales y Dólar -->
+                <!-- Costos Principales y Dólar en Vivo -->
                 <div class="card-bg p-6 rounded-2xl shadow-xl space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-700 pb-3">
                         <h2 class="text-xl font-bold text-blue-300 flex items-center gap-2">
@@ -52,14 +51,19 @@
                         </div>
                     </div>
 
-                    <!-- Input Costo -->
+                    <!-- Input Costo & Cotización API -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-slate-300 mb-1" id="labelCosto">Costo Unitario ($)</label>
                             <input type="number" id="costoProducto" value="5000" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 5000" oninput="calcular()">
                         </div>
-                        <div id="divCotizacion" class="hidden">
-                            <label class="block text-sm font-medium text-slate-300 mb-1">Cotización Dólar ($)</label>
+                        <div id="divCotizacion" class="hidden space-y-1">
+                            <div class="flex justify-between items-center">
+                                <label class="block text-sm font-medium text-slate-300">Cotización Dólar ($)</label>
+                                <button onclick="obtenerDolarEnVivo()" class="text-[10px] text-emerald-400 hover:underline flex items-center gap-1">
+                                    <i class="fa-solid fa-rotate"></i> Dólar hoy
+                                </button>
+                            </div>
                             <input type="number" id="cotizacionUsd" value="1300" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 1300" oninput="calcular()">
                         </div>
                     </div>
@@ -177,7 +181,7 @@
                 <!-- Comparativa Multicanal -->
                 <div class="card-bg p-6 rounded-2xl shadow-xl space-y-3 no-print">
                     <h3 class="text-sm font-bold text-slate-300 flex items-center gap-2">
-                        <i class="fa-solid fa-store text-blue-400"></i> Ganancia Limpia según Canal (Mismo Precio)
+                        <i class="fa-solid fa-store text-blue-400"></i> Ganancia Limpia según Canal
                     </h3>
                     <div class="space-y-2 text-xs">
                         <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
@@ -195,11 +199,17 @@
                     </div>
                 </div>
 
-                <!-- Guardar Producto / Historial -->
+                <!-- Guardar Producto & Exportar Excel -->
                 <div class="card-bg p-6 rounded-2xl shadow-xl space-y-3 no-print">
-                    <h3 class="text-sm font-bold text-slate-300 flex items-center gap-2">
-                        <i class="fa-solid fa-bookmark text-yellow-400"></i> Guardar Cotización
-                    </h3>
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-bold text-slate-300 flex items-center gap-2">
+                            <i class="fa-solid fa-bookmark text-yellow-400"></i> Productos Guardados
+                        </h3>
+                        <button onclick="exportarCSV()" class="text-[11px] bg-emerald-700 hover:bg-emerald-600 px-2 py-1 rounded-lg text-white transition flex items-center gap-1">
+                            <i class="fa-solid fa-file-excel"></i> Exportar CSV
+                        </button>
+                    </div>
+
                     <div class="flex gap-2">
                         <input type="text" id="nombreProdGuardar" placeholder="Nombre del producto..." class="p-2 rounded-lg input-style text-xs flex-1">
                         <button onclick="guardarProducto()" class="px-3 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-lg text-xs transition">Guardar</button>
@@ -229,7 +239,21 @@
             const isUsd = document.getElementById('checkUsd').checked;
             document.getElementById('divCotizacion').classList.toggle('hidden', !isUsd);
             document.getElementById('labelCosto').innerText = isUsd ? 'Costo Unitario (USD)' : 'Costo Unitario ($)';
+            if(isUsd) obtenerDolarEnVivo();
             calcular();
+        }
+
+        async function obtenerDolarEnVivo() {
+            try {
+                const res = await fetch('https://dolarapi.com/v1/dolares/blue');
+                const data = await res.json();
+                if(data && data.venta) {
+                    document.getElementById('cotizacionUsd').value = data.venta;
+                    calcular();
+                }
+            } catch(e) {
+                console.log("No se pudo obtener la cotización automática");
+            }
         }
 
         function calcular() {
@@ -245,47 +269,37 @@
             const fijosMensuales = parseFloat(document.getElementById('costosFijosMensuales').value) || 0;
             const ventasMensuales = Math.max(1, parseFloat(document.getElementById('ventasEstimadas').value) || 1);
 
-            // Prorrateo de Fijos
             const fijosPorUnidad = fijosMensuales / ventasMensuales;
             document.getElementById('incidenciaFijos').innerText = `$${fijosPorUnidad.toFixed(2)}`;
 
-            // Costo Base Total acumulado por producto
             const costoBaseTotal = costoProd + envio + fijosPorUnidad;
 
-            // Precio Venta
             const divisor = 1 - ((comisionPct + margenPct) / 100);
             let precioVenta = divisor > 0 ? (costoBaseTotal / divisor) : (costoBaseTotal * 2);
 
             const comisionMonto = precioVenta * (comisionPct / 100);
             const gananciaNeta = precioVenta - costoBaseTotal - comisionMonto;
 
-            // Punto de Equilibrio (Cant. de unidades necesarias para cubrir Costos Fijos)
-            // Margen de contribucion unitario = PrecioVenta - CostoDirecto - Comision - Envio
             const contribucionUnitaria = precioVenta - costoProd - envio - comisionMonto;
             const peUnidades = contribucionUnitaria > 0 ? Math.ceil(fijosMensuales / contribucionUnitaria) : 0;
             document.getElementById('puntoEquilibrio').innerText = `${peUnidades} unid.`;
 
-            // ROI (Retorno de Inversión)
             const roi = costoBaseTotal > 0 ? ((gananciaNeta / costoBaseTotal) * 100) : 0;
             document.getElementById('badgeRoi').innerText = `ROI: ${roi.toFixed(1)}%`;
 
-            // Promoción
             const descPct = parseFloat(document.getElementById('descSimulado').value) || 0;
             const precioPromo = precioVenta * (1 - (descPct / 100));
 
-            // Renderizar Resultados
             document.getElementById('resPrecioVenta').innerText = `$${precioVenta.toFixed(2)}`;
             document.getElementById('resGananciaNeta').innerText = `$${gananciaNeta.toFixed(2)}`;
             document.getElementById('resCostoTotal').innerText = `$${(costoBaseTotal + comisionMonto).toFixed(2)}`;
             document.getElementById('resPrecioPromo').innerText = `$${precioPromo.toFixed(2)}`;
 
-            // Salud del Margen
             const cardGanancia = document.getElementById('cardGanancia');
             if (margenPct < 15) cardGanancia.className = "p-3 rounded-xl border bg-red-950/40 border-red-800";
             else if (margenPct < 30) cardGanancia.className = "p-3 rounded-xl border bg-amber-950/40 border-amber-800";
             else cardGanancia.className = "p-3 rounded-xl border bg-emerald-950/40 border-emerald-800";
 
-            // Multicanal
             document.getElementById('ganDirecta').innerText = `$${(precioVenta - costoBaseTotal).toFixed(2)}`;
             document.getElementById('ganTN').innerText = `$${(precioVenta - costoBaseTotal - (precioVenta * 0.035)).toFixed(2)}`;
             document.getElementById('ganML').innerText = `$${(precioVenta - costoBaseTotal - (precioVenta * 0.14)).toFixed(2)}`;
@@ -327,7 +341,6 @@
             navigator.clipboard.writeText(texto).then(() => alert("¡Resumen copiado para WhatsApp!"));
         }
 
-        // Sistema de Guardado Local
         function guardarProducto() {
             const nombre = document.getElementById('nombreProdGuardar').value.trim();
             if (!nombre) return alert("Ingresá un nombre para el producto");
@@ -380,6 +393,24 @@
                     <button onclick="borrarProducto(${i})" class="text-red-400 hover:text-red-300 ml-2"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `).join('');
+        }
+
+        function exportarCSV() {
+            let guardados = JSON.parse(localStorage.getItem('prods_guardados') || '[]');
+            if (guardados.length === 0) return alert("No hay productos guardados para exportar.");
+
+            let csvContent = "data:text/csv;charset=utf-8,Producto,Costo,Comision(%),Envio,Margen(%)\n";
+            guardados.forEach(p => {
+                csvContent += `"${p.nombre}",${p.costo},${p.comision},${p.envio},${p.margen}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "catalogo_productos.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         window.onload = function() {
