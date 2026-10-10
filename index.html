@@ -24,126 +24,166 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .card-bg { background-color: #1e293b; border: 1px solid #334155; }
-        .input-style { background-color: #0f172a; border: 1px solid #475569; color: #f8fafc; }
-        .input-style:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
-        .btn-hover { transition: all 0.2s ease-in-out; }
-        .btn-hover:hover { transform: translateY(-2px); }
+        body { 
+            background: radial-gradient(circle at top left, #1e1b4b, #0f172a 40%, #020617);
+            color: #f8fafc; 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+        }
+        .glass-card { 
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+        }
+        .glass-card-sm { 
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .input-style { 
+            background-color: rgba(2, 6, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f8fafc;
+            transition: all 0.2s ease;
+        }
+        .input-style:focus { 
+            outline: none; 
+            border-color: #6366f1; 
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+            background-color: rgba(2, 6, 23, 0.8);
+        }
+        .btn-glow {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+        }
+        .btn-glow-emerald:hover {
+            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+        }
         @media print {
             body { background: white !important; color: black !important; }
             .no-print { display: none !important; }
-            .card-bg { border: 1px solid #ccc !important; background: white !important; color: black !important; }
+            .glass-card { border: 1px solid #ccc !important; background: white !important; color: black !important; box-shadow: none !important; }
         }
     </style>
 </head>
 <body class="p-3 md:p-8 min-h-screen flex flex-col justify-between">
 
-    <div class="max-w-7xl mx-auto space-y-6 w-full">
+    <div class="max-w-7xl mx-auto space-y-8 w-full">
         
         <!-- Header con Banner de Marca -->
-        <header class="text-center py-4 no-print space-y-2">
-            <div class="inline-flex items-center gap-2 bg-blue-950/60 text-blue-400 border border-blue-800 px-3 py-1 rounded-full text-xs font-semibold mb-1">
-                <i class="fa-solid fa-sparkles"></i> Herramienta Gratuita para Emprendedores
+        <header class="text-center py-6 no-print space-y-3">
+            <div class="inline-flex items-center gap-2 bg-indigo-950/80 text-indigo-300 border border-indigo-700/50 px-4 py-1.5 rounded-full text-xs font-semibold shadow-lg shadow-indigo-950/50 backdrop-blur-md">
+                <i class="fa-solid fa-sparkles text-amber-400"></i> Herramienta Gratuita para Emprendedores
             </div>
-            <h1 class="text-3xl md:text-5xl font-extrabold text-blue-400 flex items-center justify-center gap-3">
-                <i class="fa-solid fa-calculator"></i> Calculadora Emprendedora Pro
+            <h1 class="text-4xl md:text-6xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-400 flex items-center justify-center gap-3 tracking-tight">
+                <i class="fa-solid fa-calculator text-indigo-400"></i> Calculadora Emprendedora
             </h1>
-            <p class="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
+            <p class="text-slate-400 text-sm md:text-base max-w-2xl mx-auto font-normal">
                 Optimizá tus costos, precios de venta, comisiones de cobro y punto de equilibrio en tiempo real.
             </p>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
             <!-- Columna Izquierda: Entradas -->
             <div class="lg:col-span-7 space-y-6 no-print">
                 
                 <!-- Costos Principales y Dólar en Vivo -->
-                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-4">
-                    <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-                        <h2 class="text-xl font-bold text-blue-300 flex items-center gap-2">
-                            <i class="fa-solid fa-box"></i> Costo del Producto
+                <div class="glass-card p-6 md:p-8 rounded-3xl space-y-5">
+                    <div class="flex justify-between items-center border-b border-slate-700/60 pb-4">
+                        <h2 class="text-xl font-bold text-indigo-300 flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-sm">
+                                <i class="fa-solid fa-box"></i>
+                            </span>
+                            Costo del Producto
                         </h2>
-                        <div class="flex items-center gap-2 text-xs">
-                            <label class="text-slate-400 cursor-pointer" for="checkUsd">USD / Importado?</label>
-                            <input type="checkbox" id="checkUsd" onchange="toggleUsd()" class="rounded bg-slate-900 border-slate-700 cursor-pointer">
+                        <div class="flex items-center gap-2 text-xs bg-slate-900/60 px-3 py-1.5 rounded-xl border border-slate-700/50">
+                            <label class="text-slate-300 font-medium cursor-pointer" for="checkUsd">USD / Importado?</label>
+                            <input type="checkbox" id="checkUsd" onchange="toggleUsd()" class="rounded bg-slate-900 border-slate-700 cursor-pointer accent-indigo-500">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-1" id="labelCosto">Costo Unitario ($)</label>
-                            <input type="number" id="costoProducto" value="5000" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 5000" oninput="calcular()">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2" id="labelCosto">Costo Unitario ($)</label>
+                            <input type="number" id="costoProducto" value="5000" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold" placeholder="Ej: 5000" oninput="calcular()">
                         </div>
                         <div id="divCotizacion" class="hidden space-y-1">
-                            <div class="flex justify-between items-center">
-                                <label class="block text-sm font-medium text-slate-300">Cotización Dólar ($)</label>
-                                <button onclick="obtenerDolarEnVivo()" class="text-[10px] text-emerald-400 hover:underline flex items-center gap-1">
-                                    <i class="fa-solid fa-rotate"></i> Actualizar hoy
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Cotización Dólar ($)</label>
+                                <button onclick="obtenerDolarEnVivo()" class="text-[11px] text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1 transition">
+                                    <i class="fa-solid fa-rotate text-[10px]"></i> Actualizar
                                 </button>
                             </div>
-                            <input type="number" id="cotizacionUsd" value="1300" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 1300" oninput="calcular()">
+                            <input type="number" id="cotizacionUsd" value="1300" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold text-emerald-400" placeholder="Ej: 1300" oninput="calcular()">
                         </div>
                     </div>
 
                     <!-- Comisiones -->
-                    <div>
-                        <div class="flex justify-between items-center mb-1">
-                            <label class="block text-sm font-medium text-slate-300">Comisión de Pasarela / Plataforma (%)</label>
-                            <span class="text-[10px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Afecta el precio final</span>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Comisión Plataforma (%)</label>
+                            <span class="text-[10px] text-indigo-300 bg-indigo-950/80 border border-indigo-800/50 px-2.5 py-0.5 rounded-full font-medium">Afecta precio final</span>
                         </div>
-                        <input type="number" id="comisionPlataforma" value="0" class="w-full p-3 rounded-xl input-style mb-2" placeholder="Ej: 14" oninput="calcular()">
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="setComision(14)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 py-1.5 px-3 rounded-lg border border-slate-700">Mercado Libre (14%)</button>
-                            <button onclick="setComision(6.5)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 py-1.5 px-3 rounded-lg border border-slate-700">Mercado Pago (6.5%)</button>
-                            <button onclick="setComision(3.5)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 py-1.5 px-3 rounded-lg border border-slate-700">Tiendanube (3.5%)</button>
-                            <button onclick="setComision(0)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-slate-400 py-1.5 px-3 rounded-lg border border-slate-700">Sin comisión</button>
+                        <input type="number" id="comisionPlataforma" value="0" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold" placeholder="Ej: 14" oninput="calcular()">
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <button onclick="setComision(14)" class="btn-glow text-xs bg-slate-900/80 hover:bg-indigo-900/50 text-indigo-300 py-2 px-3.5 rounded-xl border border-indigo-500/30 font-medium">Mercado Libre (14%)</button>
+                            <button onclick="setComision(6.5)" class="btn-glow text-xs bg-slate-900/80 hover:bg-indigo-900/50 text-indigo-300 py-2 px-3.5 rounded-xl border border-indigo-500/30 font-medium">Mercado Pago (6.5%)</button>
+                            <button onclick="setComision(3.5)" class="btn-glow text-xs bg-slate-900/80 hover:bg-indigo-900/50 text-indigo-300 py-2 px-3.5 rounded-xl border border-indigo-500/30 font-medium">Tiendanube (3.5%)</button>
+                            <button onclick="setComision(0)" class="btn-glow text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-400 py-2 px-3.5 rounded-xl border border-slate-700/50 font-medium">Sin comisión</button>
                         </div>
                     </div>
 
                     <!-- Envíos -->
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">Gastos de Envío o Embalaje ($)</label>
-                        <input type="number" id="gastosEnvio" value="0" class="w-full p-3 rounded-xl input-style mb-2" placeholder="Ej: 800" oninput="calcular()">
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="setEnvio(500)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700">Bolsa/Caja ($500)</button>
-                            <button onclick="setEnvio(1500)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700">Moto Local ($1500)</button>
-                            <button onclick="setEnvio(4500)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700">Correo ($4500)</button>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Gastos de Envío o Embalaje ($)</label>
+                        <input type="number" id="gastosEnvio" value="0" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold" placeholder="Ej: 800" oninput="calcular()">
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <button onclick="setEnvio(500)" class="btn-glow text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-300 py-2 px-3.5 rounded-xl border border-slate-700/50 font-medium">Bolsa/Caja ($500)</button>
+                            <button onclick="setEnvio(1500)" class="btn-glow text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-300 py-2 px-3.5 rounded-xl border border-slate-700/50 font-medium">Moto Local ($1500)</button>
+                            <button onclick="setEnvio(4500)" class="btn-glow text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-300 py-2 px-3.5 rounded-xl border border-slate-700/50 font-medium">Correo ($4500)</button>
                         </div>
                     </div>
 
                     <!-- Margen -->
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">Margen de Ganancia Deseado (%)</label>
-                        <input type="number" id="margenDeseado" value="40" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 40" oninput="calcular()">
+                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Margen de Ganancia Deseado (%)</label>
+                        <input type="number" id="margenDeseado" value="40" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold text-emerald-400" placeholder="Ej: 40" oninput="calcular()">
                     </div>
                 </div>
 
                 <!-- Costos Fijos & Punto de Equilibrio -->
-                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-4">
-                    <h2 class="text-xl font-bold text-amber-400 flex items-center gap-2">
-                        <i class="fa-solid fa-scale-balanced"></i> Costos Fijos & Punto de Equilibrio
+                <div class="glass-card p-6 md:p-8 rounded-3xl space-y-5">
+                    <h2 class="text-xl font-bold text-amber-400 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 text-sm">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </span>
+                        Costos Fijos & Punto de Equilibrio
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-1">Costos Fijos Mensuales Totales ($)</label>
-                            <input type="number" id="costosFijosMensuales" value="0" class="w-full p-3 rounded-xl input-style" placeholder="Alquiler, luz, publicidad..." oninput="calcular()">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Costos Fijos Mensuales ($)</label>
+                            <input type="number" id="costosFijosMensuales" value="0" class="w-full p-3.5 rounded-2xl input-style text-base font-semibold" placeholder="Alquiler, luz, web..." oninput="calcular()">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-1">Ventas Estimadas (Unidades/Mes)</label>
-                            <input type="number" id="ventasEstimadas" value="1" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 50" oninput="calcular()">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Ventas Est. (Unidades/Mes)</label>
+                            <input type="number" id="ventasEstimadas" value="1" class="w-full p-3.5 rounded-2xl input-style text-base font-semibold" placeholder="Ej: 50" oninput="calcular()">
                         </div>
                     </div>
 
-                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 grid grid-cols-2 text-center text-xs md:text-sm">
-                        <div>
-                            <span class="text-slate-400 block">Incidencia Fija Unit.:</span>
-                            <strong id="incidenciaFijos" class="text-amber-300 text-base">$0.00</strong>
+                    <div class="p-4 glass-card-sm rounded-2xl grid grid-cols-2 text-center gap-4">
+                        <div class="border-r border-slate-700/50 pr-2">
+                            <span class="text-xs text-slate-400 block font-medium uppercase tracking-wider">Incidencia Fija Unit.</span>
+                            <strong id="incidenciaFijos" class="text-amber-300 text-lg md:text-xl font-bold mt-1 block">$0.00</strong>
                         </div>
-                        <div>
-                            <span class="text-slate-400 block">Punto de Equilibrio:</span>
-                            <strong id="puntoEquilibrio" class="text-amber-300 text-base">0 unid.</strong>
+                        <div class="pl-2">
+                            <span class="text-xs text-slate-400 block font-medium uppercase tracking-wider">Punto de Equilibrio</span>
+                            <strong id="puntoEquilibrio" class="text-amber-300 text-lg md:text-xl font-bold mt-1 block">0 unid.</strong>
                         </div>
                     </div>
                 </div>
@@ -154,46 +194,47 @@
             <div class="lg:col-span-5 space-y-6">
                 
                 <!-- Panel Principal de Resultados -->
-                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-4">
+                <div class="glass-card p-6 md:p-8 rounded-3xl space-y-5 border-indigo-500/30 shadow-2xl shadow-indigo-950/40">
                     <div class="flex justify-between items-center">
                         <h2 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
                             <i class="fa-solid fa-chart-line"></i> Resumen de Venta
                         </h2>
-                        <span id="badgeRoi" class="text-xs bg-emerald-950 text-emerald-300 border border-emerald-700 px-2.5 py-1 rounded-full font-bold">ROI: 0%</span>
+                        <span id="badgeRoi" class="text-xs bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-full font-bold shadow-sm">ROI: 0%</span>
                     </div>
 
-                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 text-center">
-                        <span class="text-xs text-slate-400 uppercase tracking-wider">Precio de Venta Sugerido</span>
-                        <div class="text-4xl font-extrabold text-emerald-400 mt-1" id="resPrecioVenta">$0.00</div>
+                    <div class="glass-card-sm p-5 rounded-2xl border border-emerald-500/20 text-center relative overflow-hidden">
+                        <div class="absolute -right-8 -top-8 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl"></div>
+                        <span class="text-xs text-slate-400 uppercase tracking-widest font-semibold block">Precio de Venta Sugerido</span>
+                        <div class="text-4xl md:text-5xl font-black text-emerald-400 mt-1 tracking-tight drop-shadow-md" id="resPrecioVenta">$0.00</div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
-                        <div id="cardGanancia" class="p-3 rounded-xl border bg-slate-900/50 border-slate-700 transition-colors">
-                            <span class="text-xs text-slate-400">Ganancia Neta</span>
-                            <div class="text-lg font-bold text-emerald-400" id="resGananciaNeta">$0.00</div>
+                        <div id="cardGanancia" class="p-4 rounded-2xl border glass-card-sm transition-all duration-300">
+                            <span class="text-xs text-slate-400 font-medium block">Ganancia Neta</span>
+                            <div class="text-xl font-bold text-emerald-400 mt-1" id="resGananciaNeta">$0.00</div>
                         </div>
-                        <div class="p-3 rounded-xl border bg-slate-900/50 border-slate-700">
-                            <span class="text-xs text-slate-400">Costo Total Inc.</span>
-                            <div class="text-lg font-bold text-red-400" id="resCostoTotal">$0.00</div>
+                        <div class="p-4 rounded-2xl border glass-card-sm border-slate-700/50">
+                            <span class="text-xs text-slate-400 font-medium block">Costo Total Inc.</span>
+                            <div class="text-xl font-bold text-rose-400 mt-1" id="resCostoTotal">$0.00</div>
                         </div>
                     </div>
 
                     <!-- Descuentos y Botones de Acción -->
-                    <div class="pt-2 border-t border-slate-700 space-y-3 no-print">
-                        <div class="flex gap-2 items-center justify-between">
-                            <label class="text-xs text-slate-400">Simular Promo (%):</label>
-                            <input type="number" id="descSimulado" value="10" class="p-1.5 rounded-lg input-style text-xs w-20 text-center" oninput="calcular()">
+                    <div class="pt-3 border-t border-slate-700/60 space-y-4 no-print">
+                        <div class="flex gap-2 items-center justify-between glass-card-sm p-3 rounded-2xl">
+                            <label class="text-xs text-slate-300 font-medium">Simular Promo (%):</label>
+                            <input type="number" id="descSimulado" value="10" class="p-1.5 rounded-xl input-style text-xs w-20 text-center font-bold" oninput="calcular()">
                             <div class="text-right text-xs">
-                                <span class="text-slate-400">Precio Promo:</span> 
-                                <strong id="resPrecioPromo" class="text-blue-300 block">$0.00</strong>
+                                <span class="text-slate-400 block text-[10px]">Precio Promo:</span> 
+                                <strong id="resPrecioPromo" class="text-blue-300 text-sm font-bold">$0.00</strong>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-2 pt-2">
-                            <button onclick="copiarResumen()" class="btn-hover py-2.5 bg-blue-600 hover:bg-blue-500 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="copiarResumen()" class="btn-glow btn-glow-emerald py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 font-bold rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-950">
                                 <i class="fa-solid fa-copy"></i> Copiar Resumen
                             </button>
-                            <button onclick="window.print()" class="btn-hover py-2.5 bg-slate-700 hover:bg-slate-600 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                            <button onclick="window.print()" class="btn-glow py-3 bg-slate-800 hover:bg-slate-700 font-bold rounded-2xl text-xs transition flex items-center justify-center gap-2 border border-slate-700">
                                 <i class="fa-solid fa-file-pdf"></i> Imprimir / PDF
                             </button>
                         </div>
@@ -201,57 +242,57 @@
                 </div>
 
                 <!-- Comparativa Multicanal -->
-                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-3 no-print">
-                    <h3 class="text-sm font-bold text-slate-300 flex items-center gap-2">
-                        <i class="fa-solid fa-store text-blue-400"></i> Ganancia Limpia según Canal
+                <div class="glass-card p-6 rounded-3xl space-y-4 no-print">
+                    <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+                        <i class="fa-solid fa-store text-indigo-400"></i> Ganancia Limpia según Canal
                     </h3>
                     <div class="space-y-2 text-xs">
-                        <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-                            <span>Venta Directa (0%)</span>
-                            <strong id="ganDirecta" class="text-emerald-400">$0.00</strong>
+                        <div class="flex justify-between items-center p-3 rounded-2xl glass-card-sm border-slate-800/80">
+                            <span class="font-medium text-slate-300">Venta Directa (0%)</span>
+                            <strong id="ganDirecta" class="text-emerald-400 text-sm font-bold">$0.00</strong>
                         </div>
-                        <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-                            <span>Tiendanube (3.5%)</span>
-                            <strong id="ganTN" class="text-blue-300">$0.00</strong>
+                        <div class="flex justify-between items-center p-3 rounded-2xl glass-card-sm border-slate-800/80">
+                            <span class="font-medium text-slate-300">Tiendanube (3.5%)</span>
+                            <strong id="ganTN" class="text-blue-300 text-sm font-bold">$0.00</strong>
                         </div>
-                        <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-                            <span>Mercado Libre (14%)</span>
-                            <strong id="ganML" class="text-amber-300">$0.00</strong>
+                        <div class="flex justify-between items-center p-3 rounded-2xl glass-card-sm border-slate-800/80">
+                            <span class="font-medium text-slate-300">Mercado Libre (14%)</span>
+                            <strong id="ganML" class="text-amber-300 text-sm font-bold">$0.00</strong>
                         </div>
                     </div>
                 </div>
 
                 <!-- Guardar Producto & Exportar Excel -->
-                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-3 no-print">
+                <div class="glass-card p-6 rounded-3xl space-y-4 no-print">
                     <div class="flex justify-between items-center">
-                        <h3 class="text-sm font-bold text-slate-300 flex items-center gap-2">
-                            <i class="fa-solid fa-bookmark text-yellow-400"></i> Productos Guardados
+                        <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+                            <i class="fa-solid fa-bookmark text-amber-400"></i> Productos Guardados
                         </h3>
-                        <button onclick="exportarCSV()" class="btn-hover text-[11px] bg-emerald-700 hover:bg-emerald-600 px-2.5 py-1 rounded-lg text-white transition flex items-center gap-1 font-semibold">
+                        <button onclick="exportarCSV()" class="btn-glow btn-glow-emerald text-[11px] bg-emerald-800/80 hover:bg-emerald-700 px-3 py-1.5 rounded-xl text-white transition flex items-center gap-1.5 font-bold border border-emerald-500/30">
                             <i class="fa-solid fa-file-excel"></i> Exportar CSV
                         </button>
                     </div>
 
                     <div class="flex gap-2">
-                        <input type="text" id="nombreProdGuardar" placeholder="Nombre del producto..." class="p-2 rounded-lg input-style text-xs flex-1">
-                        <button onclick="guardarProducto()" class="btn-hover px-3 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-lg text-xs transition">Guardar</button>
+                        <input type="text" id="nombreProdGuardar" placeholder="Nombre del producto..." class="p-3 rounded-xl input-style text-xs flex-1">
+                        <button onclick="guardarProducto()" class="btn-glow btn-glow-emerald px-4 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-xs transition">Guardar</button>
                     </div>
-                    <div id="listaGuardados" class="space-y-1.5 max-h-36 overflow-y-auto pt-2">
+                    <div id="listaGuardados" class="space-y-2 max-h-36 overflow-y-auto pt-1">
                         <!-- Lista dinámica -->
                     </div>
                 </div>
 
                 <!-- Botón Viral de Compartir -->
-                <div class="bg-gradient-to-r from-emerald-900/40 to-blue-900/40 border border-emerald-700/50 p-4 rounded-2xl text-center space-y-2 no-print">
+                <div class="bg-gradient-to-r from-emerald-950/60 via-indigo-950/60 to-slate-900/60 border border-emerald-500/30 p-5 rounded-3xl text-center space-y-3 no-print backdrop-blur-md shadow-xl">
                     <p class="text-xs text-slate-300 font-medium">¿Te sirvió la herramienta? Compartila con otro emprendedor 🚀</p>
-                    <button onclick="compartirWhatsApp()" class="btn-hover w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition shadow-lg">
-                        <i class="fa-brands fa-whatsapp text-sm"></i> Compartir por WhatsApp
+                    <button onclick="compartirWhatsApp()" class="btn-glow btn-glow-emerald w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-2xl text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-950">
+                        <i class="fa-brands fa-whatsapp text-base"></i> Compartir por WhatsApp
                     </button>
                 </div>
 
                 <!-- Gráfico de Desglose -->
-                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-3 no-print">
-                    <h3 class="text-xs font-bold text-slate-400 text-center uppercase tracking-wider">Estructura del Precio</h3>
+                <div class="glass-card p-6 rounded-3xl space-y-3 no-print">
+                    <h3 class="text-xs font-bold text-slate-400 text-center uppercase tracking-widest">Estructura del Precio</h3>
                     <div class="relative w-full h-44 flex justify-center">
                         <canvas id="graficoDesglose"></canvas>
                     </div>
@@ -263,13 +304,10 @@
     </div>
 
     <!-- Footer Comercial y Créditos -->
-    <footer class="mt-12 py-6 border-t border-slate-800 text-center text-xs text-slate-500 space-y-2 no-print">
+    <footer class="mt-16 py-8 border-t border-slate-800/80 text-center text-xs text-slate-500 space-y-2 no-print">
         <p>© 2026 Calculadora Emprendedora Pro. Herramienta de uso libre y gratuito.</p>
         <p class="flex items-center justify-center gap-1">
-            Desarrollado con ❤️ para impulsar emprendimientos en Argentina | 
-            <a href="https://instagram.com" target="_blank" class="text-blue-400 hover:underline flex items-center gap-1 ml-1">
-                <i class="fa-brands fa-instagram"></i> Visitanos en Instagram
-            </a>
+            Desarrollado con ❤️ para impulsar emprendimientos en Argentina
         </p>
     </footer>
 
@@ -337,9 +375,9 @@
             document.getElementById('resPrecioPromo').innerText = `$${precioPromo.toFixed(2)}`;
 
             const cardGanancia = document.getElementById('cardGanancia');
-            if (margenPct < 15) cardGanancia.className = "p-3 rounded-xl border bg-red-950/40 border-red-800 transition-colors";
-            else if (margenPct < 30) cardGanancia.className = "p-3 rounded-xl border bg-amber-950/40 border-amber-800 transition-colors";
-            else cardGanancia.className = "p-3 rounded-xl border bg-emerald-950/40 border-emerald-800 transition-colors";
+            if (margenPct < 15) cardGanancia.className = "p-4 rounded-2xl border glass-card-sm border-rose-500/40 bg-rose-950/20";
+            else if (margenPct < 30) cardGanancia.className = "p-4 rounded-2xl border glass-card-sm border-amber-500/40 bg-amber-950/20";
+            else cardGanancia.className = "p-4 rounded-2xl border glass-card-sm border-emerald-500/40 bg-emerald-950/20";
 
             document.getElementById('ganDirecta').innerText = `$${(precioVenta - costoBaseTotal).toFixed(2)}`;
             document.getElementById('ganTN').innerText = `$${(precioVenta - costoBaseTotal - (precioVenta * 0.035)).toFixed(2)}`;
@@ -361,7 +399,7 @@
                     labels: ['Costo Producto', 'Envío/Fijos', 'Comisión', 'Ganancia Neta'],
                     datasets: [{
                         data: [Math.max(0, costo), Math.max(0, enviosFijos), Math.max(0, comision), Math.max(0, ganancia)],
-                        backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6', '#10b981'],
+                        backgroundColor: ['#f43f5e', '#f59e0b', '#6366f1', '#10b981'],
                         borderWidth: 0
                     }]
                 },
@@ -430,14 +468,14 @@
             let guardados = JSON.parse(localStorage.getItem('prods_guardados') || '[]');
             const cont = document.getElementById('listaGuardados');
             if (guardados.length === 0) {
-                cont.innerHTML = `<span class="text-xs text-slate-500 block text-center">No hay productos guardados</span>`;
+                cont.innerHTML = `<span class="text-xs text-slate-500 block text-center py-2">No hay productos guardados</span>`;
                 return;
             }
 
             cont.innerHTML = guardados.map((p, i) => `
-                <div class="flex justify-between items-center bg-slate-900/80 p-2 rounded-lg border border-slate-800 text-xs">
-                    <span class="font-medium text-slate-300 truncate cursor-pointer hover:text-blue-400" onclick="cargarProducto(${i})">${p.nombre}</span>
-                    <button onclick="borrarProducto(${i})" class="text-red-400 hover:text-red-300 ml-2"><i class="fa-solid fa-trash"></i></button>
+                <div class="flex justify-between items-center glass-card-sm p-2.5 rounded-xl border border-slate-800 text-xs">
+                    <span class="font-medium text-slate-300 truncate cursor-pointer hover:text-indigo-400" onclick="cargarProducto(${i})">${p.nombre}</span>
+                    <button onclick="borrarProducto(${i})" class="text-rose-400 hover:text-rose-300 ml-2"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `).join('');
         }
