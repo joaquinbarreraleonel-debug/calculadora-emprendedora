@@ -3,18 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Emprendedora Pro</title>
+    <title>Calculadora Emprendedora Argentina | Costos, Mercado Libre y Márgenes</title>
+    
+    <!-- Meta SEO -->
+    <meta name="description" content="Calculá gratis tus precios de venta, comisiones de Mercado Libre, Mercado Pago, Tiendanube, envíos y punto de equilibrio en Argentina.">
+    <meta name="keywords" content="calculadora emprendedora, calcular costo mercado libre, comision mercado pago, calcular margen de ganancia, punto de equilibrio argentina">
+    <meta name="author" content="Accesorios GB">
+
+    <!-- Open Graph / Meta para WhatsApp y Redes Sociales -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Calculadora Emprendedora Pro - Optimizá tus Precios">
+    <meta property="og:description" content="Calculá tus costos, comisiones de plataformas y margen de ganancia en segundos. ¡Herramienta 100% gratuita!">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .card-bg { background-color: #1e293b; border: 1px solid #334155; }
         .input-style { background-color: #0f172a; border: 1px solid #475569; color: #f8fafc; }
         .input-style:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        .btn-hover { transition: all 0.2s ease-in-out; }
+        .btn-hover:hover { transform: translateY(-2px); }
         @media print {
             body { background: white !important; color: black !important; }
             .no-print { display: none !important; }
@@ -22,16 +37,21 @@
         }
     </style>
 </head>
-<body class="p-3 md:p-8 min-h-screen">
+<body class="p-3 md:p-8 min-h-screen flex flex-col justify-between">
 
-    <div class="max-w-7xl mx-auto space-y-6">
+    <div class="max-w-7xl mx-auto space-y-6 w-full">
         
-        <!-- Header -->
-        <header class="text-center py-4 no-print">
+        <!-- Header con Banner de Marca -->
+        <header class="text-center py-4 no-print space-y-2">
+            <div class="inline-flex items-center gap-2 bg-blue-950/60 text-blue-400 border border-blue-800 px-3 py-1 rounded-full text-xs font-semibold mb-1">
+                <i class="fa-solid fa-sparkles"></i> Herramienta Gratuita para Emprendedores
+            </div>
             <h1 class="text-3xl md:text-5xl font-extrabold text-blue-400 flex items-center justify-center gap-3">
                 <i class="fa-solid fa-calculator"></i> Calculadora Emprendedora Pro
             </h1>
-            <p class="text-slate-400 text-sm md:text-base mt-1">Gestión integral de costos, márgenes, dólar en vivo y multicanal</p>
+            <p class="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
+                Optimizá tus costos, precios de venta, comisiones de cobro y punto de equilibrio en tiempo real.
+            </p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -46,12 +66,11 @@
                             <i class="fa-solid fa-box"></i> Costo del Producto
                         </h2>
                         <div class="flex items-center gap-2 text-xs">
-                            <label class="text-slate-400">USD?</label>
-                            <input type="checkbox" id="checkUsd" onchange="toggleUsd()" class="rounded bg-slate-900 border-slate-700">
+                            <label class="text-slate-400 cursor-pointer" for="checkUsd">USD / Importado?</label>
+                            <input type="checkbox" id="checkUsd" onchange="toggleUsd()" class="rounded bg-slate-900 border-slate-700 cursor-pointer">
                         </div>
                     </div>
 
-                    <!-- Input Costo & Cotización API -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-slate-300 mb-1" id="labelCosto">Costo Unitario ($)</label>
@@ -61,7 +80,7 @@
                             <div class="flex justify-between items-center">
                                 <label class="block text-sm font-medium text-slate-300">Cotización Dólar ($)</label>
                                 <button onclick="obtenerDolarEnVivo()" class="text-[10px] text-emerald-400 hover:underline flex items-center gap-1">
-                                    <i class="fa-solid fa-rotate"></i> Dólar hoy
+                                    <i class="fa-solid fa-rotate"></i> Actualizar hoy
                                 </button>
                             </div>
                             <input type="number" id="cotizacionUsd" value="1300" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 1300" oninput="calcular()">
@@ -70,13 +89,16 @@
 
                     <!-- Comisiones -->
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">Comisión de Pasarela / Plataforma (%)</label>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-sm font-medium text-slate-300">Comisión de Pasarela / Plataforma (%)</label>
+                            <span class="text-[10px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Afecta el precio final</span>
+                        </div>
                         <input type="number" id="comisionPlataforma" value="0" class="w-full p-3 rounded-xl input-style mb-2" placeholder="Ej: 14" oninput="calcular()">
                         <div class="flex flex-wrap gap-2">
-                            <button onclick="setComision(14)" class="text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Mercado Libre (14%)</button>
-                            <button onclick="setComision(6.5)" class="text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Mercado Pago (6.5%)</button>
-                            <button onclick="setComision(3.5)" class="text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Tiendanube (3.5%)</button>
-                            <button onclick="setComision(0)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-400 py-1.5 px-3 rounded-lg border border-slate-700 transition">Sin comisión</button>
+                            <button onclick="setComision(14)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 py-1.5 px-3 rounded-lg border border-slate-700">Mercado Libre (14%)</button>
+                            <button onclick="setComision(6.5)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 py-1.5 px-3 rounded-lg border border-slate-700">Mercado Pago (6.5%)</button>
+                            <button onclick="setComision(3.5)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 py-1.5 px-3 rounded-lg border border-slate-700">Tiendanube (3.5%)</button>
+                            <button onclick="setComision(0)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-slate-400 py-1.5 px-3 rounded-lg border border-slate-700">Sin comisión</button>
                         </div>
                     </div>
 
@@ -85,9 +107,9 @@
                         <label class="block text-sm font-medium text-slate-300 mb-1">Gastos de Envío o Embalaje ($)</label>
                         <input type="number" id="gastosEnvio" value="0" class="w-full p-3 rounded-xl input-style mb-2" placeholder="Ej: 800" oninput="calcular()">
                         <div class="flex flex-wrap gap-2">
-                            <button onclick="setEnvio(500)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Bolsa/Caja ($500)</button>
-                            <button onclick="setEnvio(1500)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Moto Local ($1500)</button>
-                            <button onclick="setEnvio(4500)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Correo ($4500)</button>
+                            <button onclick="setEnvio(500)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700">Bolsa/Caja ($500)</button>
+                            <button onclick="setEnvio(1500)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700">Moto Local ($1500)</button>
+                            <button onclick="setEnvio(4500)" class="btn-hover text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700">Correo ($4500)</button>
                         </div>
                     </div>
 
@@ -146,7 +168,7 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
-                        <div id="cardGanancia" class="p-3 rounded-xl border bg-slate-900/50 border-slate-700">
+                        <div id="cardGanancia" class="p-3 rounded-xl border bg-slate-900/50 border-slate-700 transition-colors">
                             <span class="text-xs text-slate-400">Ganancia Neta</span>
                             <div class="text-lg font-bold text-emerald-400" id="resGananciaNeta">$0.00</div>
                         </div>
@@ -168,10 +190,10 @@
                         </div>
 
                         <div class="grid grid-cols-2 gap-2 pt-2">
-                            <button onclick="copiarResumen()" class="py-2.5 bg-blue-600 hover:bg-blue-500 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5">
-                                <i class="fa-solid fa-copy"></i> Copiar WhatsApp
+                            <button onclick="copiarResumen()" class="btn-hover py-2.5 bg-blue-600 hover:bg-blue-500 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-copy"></i> Copiar Resumen
                             </button>
-                            <button onclick="window.print()" class="py-2.5 bg-slate-700 hover:bg-slate-600 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                            <button onclick="window.print()" class="btn-hover py-2.5 bg-slate-700 hover:bg-slate-600 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-file-pdf"></i> Imprimir / PDF
                             </button>
                         </div>
@@ -205,18 +227,26 @@
                         <h3 class="text-sm font-bold text-slate-300 flex items-center gap-2">
                             <i class="fa-solid fa-bookmark text-yellow-400"></i> Productos Guardados
                         </h3>
-                        <button onclick="exportarCSV()" class="text-[11px] bg-emerald-700 hover:bg-emerald-600 px-2 py-1 rounded-lg text-white transition flex items-center gap-1">
+                        <button onclick="exportarCSV()" class="btn-hover text-[11px] bg-emerald-700 hover:bg-emerald-600 px-2.5 py-1 rounded-lg text-white transition flex items-center gap-1 font-semibold">
                             <i class="fa-solid fa-file-excel"></i> Exportar CSV
                         </button>
                     </div>
 
                     <div class="flex gap-2">
                         <input type="text" id="nombreProdGuardar" placeholder="Nombre del producto..." class="p-2 rounded-lg input-style text-xs flex-1">
-                        <button onclick="guardarProducto()" class="px-3 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-lg text-xs transition">Guardar</button>
+                        <button onclick="guardarProducto()" class="btn-hover px-3 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-lg text-xs transition">Guardar</button>
                     </div>
                     <div id="listaGuardados" class="space-y-1.5 max-h-36 overflow-y-auto pt-2">
                         <!-- Lista dinámica -->
                     </div>
+                </div>
+
+                <!-- Botón Viral de Compartir -->
+                <div class="bg-gradient-to-r from-emerald-900/40 to-blue-900/40 border border-emerald-700/50 p-4 rounded-2xl text-center space-y-2 no-print">
+                    <p class="text-xs text-slate-300 font-medium">¿Te sirvió la herramienta? Compartila con otro emprendedor 🚀</p>
+                    <button onclick="compartirWhatsApp()" class="btn-hover w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition shadow-lg">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> Compartir por WhatsApp
+                    </button>
                 </div>
 
                 <!-- Gráfico de Desglose -->
@@ -231,6 +261,17 @@
 
         </div>
     </div>
+
+    <!-- Footer Comercial y Créditos -->
+    <footer class="mt-12 py-6 border-t border-slate-800 text-center text-xs text-slate-500 space-y-2 no-print">
+        <p>© 2026 Calculadora Emprendedora Pro. Herramienta de uso libre y gratuito.</p>
+        <p class="flex items-center justify-center gap-1">
+            Desarrollado con ❤️ para impulsar emprendimientos en Argentina | 
+            <a href="https://instagram.com" target="_blank" class="text-blue-400 hover:underline flex items-center gap-1 ml-1">
+                <i class="fa-brands fa-instagram"></i> Visitanos en Instagram
+            </a>
+        </p>
+    </footer>
 
     <script>
         let chart;
@@ -296,9 +337,9 @@
             document.getElementById('resPrecioPromo').innerText = `$${precioPromo.toFixed(2)}`;
 
             const cardGanancia = document.getElementById('cardGanancia');
-            if (margenPct < 15) cardGanancia.className = "p-3 rounded-xl border bg-red-950/40 border-red-800";
-            else if (margenPct < 30) cardGanancia.className = "p-3 rounded-xl border bg-amber-950/40 border-amber-800";
-            else cardGanancia.className = "p-3 rounded-xl border bg-emerald-950/40 border-emerald-800";
+            if (margenPct < 15) cardGanancia.className = "p-3 rounded-xl border bg-red-950/40 border-red-800 transition-colors";
+            else if (margenPct < 30) cardGanancia.className = "p-3 rounded-xl border bg-amber-950/40 border-amber-800 transition-colors";
+            else cardGanancia.className = "p-3 rounded-xl border bg-emerald-950/40 border-emerald-800 transition-colors";
 
             document.getElementById('ganDirecta').innerText = `$${(precioVenta - costoBaseTotal).toFixed(2)}`;
             document.getElementById('ganTN').innerText = `$${(precioVenta - costoBaseTotal - (precioVenta * 0.035)).toFixed(2)}`;
@@ -339,6 +380,12 @@
             
             const texto = `📊 *Cotización de Producto*\n• Precio Venta: ${precio}\n• Ganancia Neta: ${ganancia}\n• Precio Promocional: ${promo}`;
             navigator.clipboard.writeText(texto).then(() => alert("¡Resumen copiado para WhatsApp!"));
+        }
+
+        function compartirWhatsApp() {
+            const url = window.location.href;
+            const texto = `¡Hola! Te comparto esta Calculadora Emprendedora súper útil para sacar costos, comisiones de Mercado Libre y precios de venta en segundos: ${url}`;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`, '_blank');
         }
 
         function guardarProducto() {
