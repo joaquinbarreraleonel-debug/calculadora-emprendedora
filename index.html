@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora Emprendedora & Generador Comercial</title>
+  <!-- Chart.js para gráficos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome para íconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #151d2a;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --input-bg: #0f172a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 24px 16px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 520px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      font-size: 1.15rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+    }
+
+    .card h2 i {
+      color: var(--accent);
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: var(--input-bg);
+      color: var(--text);
+      font-size: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+
+    .presets-container {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      margin-bottom: 14px;
+    }
+
+    .btn-preset {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-preset:hover, .btn-preset.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--accent) 0%, #0284c7 100%);
+      color: #0f172a;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.1s, opacity 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.95;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .results-panel {
+      margin-top: 20px;
+      padding: 16px;
+      background: var(--input-bg);
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.95rem;
+    }
+
+    .result-row:last-child {
+      border-bottom: none;
+    }
+
+    .result-row.main {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--success);
+      padding-top: 12px;
+      margin-top: 4px;
+      border-top: 2px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    .chart-box {
+      margin-top: 16px;
+      max-height: 200px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .ad-placeholder {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px dashed #334155;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      margin-bottom: 20px;
+    }
+
+    .input-action-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      padding: 12px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: var(--accent);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-icon:hover {
+      background: rgba(56, 189, 248, 0.15);
+    }
+
+    a.link-out {
+      color: var(--accent);
+      text-decoration: none;
+      word-break: break-all;
+      font-size: 0.85rem;
+    }
+
+    a.link-out:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Calculadora Emprendedora</h1>
+    <p>Optimizá tus costos, precios de venta y herramientas de comercialización</p>
+  </header>
+
+  <!-- Módulo 1: Calculadora de Precio -->
+  <div class="card">
+    <h2><i class="fa-solid fa-calculator"></i> Cálculo de Precio & Margen</h2>
+
+    <div class="form-group">
+      <label for="costo">Costo del Producto ($)</label>
+      <input type="number" id="costo" placeholder="Ej: 5000">
+    </div>
+
+    <div class="form-group">
+      <label>Comisión de Plataforma / Pasarela (%)</label>
+      <input type="number" id="comision" value="0" placeholder="Ej: 14">
+      <div class="presets-container">
+        <button class="btn-preset" onclick="setComision(14)">Mercado Libre (14%)</button>
+        <button class="btn-preset" onclick="setComision(6.5)">Mercado Pago (6.5%)</button>
+        <button class="btn-preset" onclick="setComision(3.5)">Tiendanube (3.5%)</button>
+        <button class="btn-preset" onclick="setComision(0)">Sin comisión</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="gastosExtra">Gastos de Envío o Embalaje ($)</label>
+      <input type="number" id="gastosExtra" value="0" placeholder="Ej: 500">
+    </div>
+
+    <div class="form-group">
+      <label for="margen">Margen de Ganancia Deseado (%)</label>
+      <input type="number" id="margen" value="30">
+    </div>
+
+    <button class="btn-primary" onclick="calcularPrecio()">
+      <i class="fa-solid fa-chart-line"></i> Calcular Precio Sugerido
+    </button>
+
+    <div class="results-panel" id="resPrecio" style="display:none;">
+      <div class="result-row">
+        <span>Costo Base:</span>
+        <span id="valCosto">$0.00</span>
+      </div>
+      <div class="result-row">
+        <span>Envío / Embalaje:</span>
+        <span id="valEnvio">$0.00</span>
+      </div>
+      <div class="result-row">
+        <span>Comisión de Venta:</span>
+        <span id="valMontoComision">$0.00</span>
+      </div>
+      <div class="result-row">
+        <span>Ganancia Neta:</span>
+        <span id="valGanancia" style="color: var(--accent); font-weight:700;">$0.00</span>
+      </div>
+      <div class="result-row main">
+        <span>Precio Sugerido:</span>
+        <span id="valPrecio">$0.00</span>
+      </div>
+
+      <div class="chart-box">
+        <canvas id="chartCostos"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Espacio para Anuncios AdSense -->
+  <div class="ad-placeholder">
+    <i class="fa-solid fa-rectangle-ad"></i> Espacio reservado para Banners de Publicidad (Google AdSense)
+  </div>
+
+  <!-- Módulo 2: Creador de Link WhatsApp -->
+  <div class="card">
+    <h2><i class="fa-brands fa-whatsapp"></i> Creador de Enlace para WhatsApp</h2>
+
+    <div class="form-group">
+      <label for="phone">Número de WhatsApp (con código de país sin +)</label>
+      <input type="text" id="phone" placeholder="Ej: 5492611234567">
+    </div>
+
+    <div class="form-group">
+      <label for="message">Mensaje Predeterminado</label>
+      <input type="text" id="message" placeholder="Ej: Hola! Quisiera consultar por un producto.">
+    </div>
+
+    <button class="btn-primary" onclick="generarLinkWS()">
+      <i class="fa-solid fa-link"></i> Generar Link Directo
+    </button>
+
+    <div class="results-panel" id="resWS" style="display:none; margin-top: 15px;">
+      <label>Tu enlace generado:</label>
+      <div class="input-action-group">
+        <input type="text" id="inputGeneratedLink" readonly>
+        <button class="btn-icon" onclick="copiarLinkWS()" title="Copiar enlace">
+          <i class="fa-regular fa-copy"></i>
+        </button>
+      </div>
+      <div style="margin-top: 10px;">
+        <a id="linkWS" href="#" target="_blank" class="link-out">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Probar enlace en ventana nueva
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let chartInstance = null;
+
+  function setComision(val) {
+    document.getElementById('comision').value = val;
+  }
+
+  function calcularPrecio() {
+    const costo = parseFloat(document.getElementById('costo').value) || 0;
+    const comisionPct = parseFloat(document.getElementById('comision').value) || 0;
+    const gastosExtra = parseFloat(document.getElementById('gastosExtra').value) || 0;
+    const margenPct = parseFloat(document.getElementById('margen').value) || 0;
+
+    if (costo <= 0) return;
+
+    // Fórmula para calcular precio cubriendo costo, gastos, margen deseado y comisión porcentual
+    const margenDecimal = margenPct / 100;
+    const comisionDecimal = comisionPct / 100;
+
+    // Precio = (Costo + Gastos) * (1 + Margen) / (1 - Comisión)
+    const subtotal = (costo + gastosExtra) * (1 + margenDecimal);
+    const precioFinal = comisionDecimal < 1 ? subtotal / (1 - comisionDecimal) : subtotal;
+
+    const montoComision = precioFinal * comisionDecimal;
+    const ganancia = (precioFinal - montoComision) - costo - gastosExtra;
+
+    document.getElementById('valCosto').innerText = `$${costo.toFixed(2)}`;
+    document.getElementById('valEnvio').innerText = `$${gastosExtra.toFixed(2)}`;
+    document.getElementById('valMontoComision').innerText = `$${montoComision.toFixed(2)}`;
+    document.getElementById('valGanancia').innerText = `$${ganancia.toFixed(2)}`;
+    document.getElementById('valPrecio').innerText = `$${precioFinal.toFixed(2)}`;
+
+    document.getElementById('resPrecio').style.display = 'block';
+
+    // Renderizar o actualizar el gráfico
+    renderChart(costo, gastosExtra, montoComision, ganancia);
+  }
+
+  function renderChart(costo, envio, comision, ganancia) {
+    const ctx = document.getElementById('chartCostos').getContext('2d');
+
+    if (chartInstance) {
+      chartInstance.destroy();
+    }
+
+    chartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Costo Producto', 'Envío/Embalaje', 'Comisiones', 'Ganancia Neta'],
+        datasets: [{
+          data: [costo, envio, comision, ganancia],
+          backgroundColor: ['#e2e8f0', '#f59e0b', '#ef4444', '#10b981'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: '#94a3b8', font: { size: 11 } }
+          }
+        }
+      }
+    });
+  }
+
+  function generarLinkWS() {
+    const phone = document.getElementById('phone').value.replace(/\D/g, '');
+    const message = encodeURIComponent(document.getElementById('message').value.trim());
+
+    if (!phone) return;
+
+    const url = `https://wa.me/${phone}${message ? '?text=' + message : ''}`;
+    
+    document.getElementById('inputGeneratedLink').value = url;
+    document.getElementById('linkWS').href = url;
+    document.getElementById('resWS').style.display = 'block';
+  }
+
+  function copiarLinkWS() {
+    const copyText = document.getElementById('inputGeneratedLink');
+    copyText.select();
+    navigator.clipboard.writeText(copyText.value);
+    alert('¡Enlace copiado al portapapeles!');
+  }
+</script>
+
+</body>
+</html>
