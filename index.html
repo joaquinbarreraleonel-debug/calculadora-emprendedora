@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Emprendedora Pro</title>
+    <title>Calculadora Emprendedora Ultra</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -11,53 +11,57 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background-color: #0f172a;
-            color: #f8fafc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .card-bg {
-            background-color: #1e293b;
-            border: 1px solid #334155;
-        }
-        .input-style {
-            background-color: #0f172a;
-            border: 1px solid #475569;
-            color: #f8fafc;
-        }
-        .input-style:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card-bg { background-color: #1e293b; border: 1px solid #334155; }
+        .input-style { background-color: #0f172a; border: 1px solid #475569; color: #f8fafc; }
+        .input-style:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        @media print {
+            body { background: white !important; color: black !important; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .card-bg { border: 1px solid #ccc !important; background: white !important; color: black !important; }
         }
     </style>
 </head>
-<body class="p-4 md:p-8 min-h-screen">
+<body class="p-3 md:p-8 min-h-screen">
 
-    <div class="max-w-6xl mx-auto space-y-6">
+    <div class="max-w-7xl mx-auto space-y-6">
         
         <!-- Header -->
-        <header class="text-center py-4">
-            <h1 class="text-3xl md:text-4xl font-extrabold text-blue-400 flex items-center justify-center gap-3">
-                <i class="fa-solid font-bold fa-calculator"></i> Calculadora Emprendedora Pro
+        <header class="text-center py-4 no-print">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-blue-400 flex items-center justify-center gap-3">
+                <i class="fa-solid fa-calculator"></i> Calculadora Emprendedora Ultra
             </h1>
-            <p class="text-slate-400 text-sm md:text-base mt-1">Optimizá costos, márgenes, envíos y precios de venta</p>
+            <p class="text-slate-400 text-sm md:text-base mt-1">Gestión integral de costos, márgenes, punto de equilibrio y multicanal</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-            <!-- Columna Izquierda: Formulario de Entrada -->
-            <div class="lg:col-span-7 space-y-6">
+            <!-- Columna Izquierda: Entradas -->
+            <div class="lg:col-span-7 space-y-6 no-print">
                 
+                <!-- Costos Principales y Dólar -->
                 <div class="card-bg p-6 rounded-2xl shadow-xl space-y-4">
-                    <h2 class="text-xl font-bold text-blue-300 flex items-center gap-2">
-                        <i class="fa-solid fa-box"></i> Costos Directos & Márgenes
-                    </h2>
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                        <h2 class="text-xl font-bold text-blue-300 flex items-center gap-2">
+                            <i class="fa-solid fa-box"></i> Costo del Producto
+                        </h2>
+                        <div class="flex items-center gap-2 text-xs">
+                            <label class="text-slate-400">USD?</label>
+                            <input type="checkbox" id="checkUsd" onchange="toggleUsd()" class="rounded bg-slate-900 border-slate-700">
+                        </div>
+                    </div>
 
-                    <!-- Costo Base -->
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">Costo Unitario del Producto ($)</label>
-                        <input type="number" id="costoProducto" value="5000" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 5000" oninput="calcular()">
+                    <!-- Input Costo -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1" id="labelCosto">Costo Unitario ($)</label>
+                            <input type="number" id="costoProducto" value="5000" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 5000" oninput="calcular()">
+                        </div>
+                        <div id="divCotizacion" class="hidden">
+                            <label class="block text-sm font-medium text-slate-300 mb-1">Cotización Dólar ($)</label>
+                            <input type="number" id="cotizacionUsd" value="1300" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 1300" oninput="calcular()">
+                        </div>
                     </div>
 
                     <!-- Comisiones -->
@@ -72,52 +76,65 @@
                         </div>
                     </div>
 
-                    <!-- Envíos / Embalaje -->
+                    <!-- Envíos -->
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Gastos de Envío o Embalaje ($)</label>
                         <input type="number" id="gastosEnvio" value="0" class="w-full p-3 rounded-xl input-style mb-2" placeholder="Ej: 800" oninput="calcular()">
                         <div class="flex flex-wrap gap-2">
                             <button onclick="setEnvio(500)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Bolsa/Caja ($500)</button>
                             <button onclick="setEnvio(1500)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Moto Local ($1500)</button>
-                            <button onclick="setEnvio(4500)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Correo Nacional ($4500)</button>
+                            <button onclick="setEnvio(4500)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-lg border border-slate-700 transition">Correo ($4500)</button>
                         </div>
                     </div>
 
-                    <!-- Margen Deseado -->
+                    <!-- Margen -->
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Margen de Ganancia Deseado (%)</label>
                         <input type="number" id="margenDeseado" value="40" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 40" oninput="calcular()">
                     </div>
                 </div>
 
-                <!-- Modulo Costos Fijos Mensuales -->
+                <!-- Costos Fijos & Punto de Equilibrio -->
                 <div class="card-bg p-6 rounded-2xl shadow-xl space-y-4">
                     <h2 class="text-xl font-bold text-amber-400 flex items-center gap-2">
-                        <i class="fa-solid fa-calculator"></i> Prorrateo de Costos Fijos (Opcional)
+                        <i class="fa-solid fa-scale-balanced"></i> Costos Fijos & Punto de Equilibrio
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-1">Costos Fijos Mensuales ($)</label>
-                            <input type="number" id="costosFijosMensuales" value="0" class="w-full p-3 rounded-xl input-style" placeholder="Alquiler, luz, web..." oninput="calcular()">
+                            <label class="block text-sm font-medium text-slate-300 mb-1">Costos Fijos Mensuales Totales ($)</label>
+                            <input type="number" id="costosFijosMensuales" value="0" class="w-full p-3 rounded-xl input-style" placeholder="Alquiler, luz, publicidad..." oninput="calcular()">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-1">Ventas Est. por Mes (Unidades)</label>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">Ventas Estimadas (Unidades/Mes)</label>
                             <input type="number" id="ventasEstimadas" value="1" class="w-full p-3 rounded-xl input-style" placeholder="Ej: 50" oninput="calcular()">
                         </div>
                     </div>
-                    <p class="text-xs text-slate-400">Incidencia por unidad: <span id="incidenciaFijos" class="font-bold text-amber-300">$0.00</span></p>
+
+                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 grid grid-cols-2 text-center text-xs md:text-sm">
+                        <div>
+                            <span class="text-slate-400 block">Incidencia Fija Unit.:</span>
+                            <strong id="incidenciaFijos" class="text-amber-300 text-base">$0.00</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block">Punto de Equilibrio:</span>
+                            <strong id="puntoEquilibrio" class="text-amber-300 text-base">0 unid.</strong>
+                        </div>
+                    </div>
                 </div>
 
             </div>
 
-            <!-- Columna Derecha: Resultados y Análisis -->
+            <!-- Columna Derecha: Resultados y Multicanal -->
             <div class="lg:col-span-5 space-y-6">
                 
-                <!-- Resultados Principales -->
+                <!-- Panel Principal de Resultados -->
                 <div class="card-bg p-6 rounded-2xl shadow-xl space-y-4">
-                    <h2 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-line"></i> Resumen de Venta
-                    </h2>
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line"></i> Resumen de Venta
+                        </h2>
+                        <span id="badgeRoi" class="text-xs bg-emerald-950 text-emerald-300 border border-emerald-700 px-2.5 py-1 rounded-full font-bold">ROI: 0%</span>
+                    </div>
 
                     <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 text-center">
                         <span class="text-xs text-slate-400 uppercase tracking-wider">Precio de Venta Sugerido</span>
@@ -135,27 +152,67 @@
                         </div>
                     </div>
 
-                    <!-- Simulador de Descuentos -->
-                    <div class="pt-2 border-t border-slate-700">
-                        <label class="block text-xs text-slate-400 mb-1">Simular Promoción / Descuento (%)</label>
-                        <div class="flex gap-2">
-                            <input type="number" id="descSimulado" value="10" class="p-2 rounded-lg input-style text-sm w-24" oninput="calcular()">
-                            <div class="flex-1 text-right text-xs self-center">
+                    <!-- Descuentos y Botones de Acción -->
+                    <div class="pt-2 border-t border-slate-700 space-y-3 no-print">
+                        <div class="flex gap-2 items-center justify-between">
+                            <label class="text-xs text-slate-400">Simular Promo (%):</label>
+                            <input type="number" id="descSimulado" value="10" class="p-1.5 rounded-lg input-style text-xs w-20 text-center" oninput="calcular()">
+                            <div class="text-right text-xs">
                                 <span class="text-slate-400">Precio Promo:</span> 
-                                <strong id="resPrecioPromo" class="text-blue-300 block text-sm">$0.00</strong>
+                                <strong id="resPrecioPromo" class="text-blue-300 block">$0.00</strong>
                             </div>
                         </div>
-                    </div>
 
-                    <button onclick="copiarResumen()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 font-bold rounded-xl transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-copy"></i> Copiar Resumen para WhatsApp
-                    </button>
+                        <div class="grid grid-cols-2 gap-2 pt-2">
+                            <button onclick="copiarResumen()" class="py-2.5 bg-blue-600 hover:bg-blue-500 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-copy"></i> Copiar WhatsApp
+                            </button>
+                            <button onclick="window.print()" class="py-2.5 bg-slate-700 hover:bg-slate-600 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-file-pdf"></i> Imprimir / PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparativa Multicanal -->
+                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-3 no-print">
+                    <h3 class="text-sm font-bold text-slate-300 flex items-center gap-2">
+                        <i class="fa-solid fa-store text-blue-400"></i> Ganancia Limpia según Canal (Mismo Precio)
+                    </h3>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+                            <span>Venta Directa (0%)</span>
+                            <strong id="ganDirecta" class="text-emerald-400">$0.00</strong>
+                        </div>
+                        <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+                            <span>Tiendanube (3.5%)</span>
+                            <strong id="ganTN" class="text-blue-300">$0.00</strong>
+                        </div>
+                        <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+                            <span>Mercado Libre (14%)</span>
+                            <strong id="ganML" class="text-amber-300">$0.00</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guardar Producto / Historial -->
+                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-3 no-print">
+                    <h3 class="text-sm font-bold text-slate-300 flex items-center gap-2">
+                        <i class="fa-solid fa-bookmark text-yellow-400"></i> Guardar Cotización
+                    </h3>
+                    <div class="flex gap-2">
+                        <input type="text" id="nombreProdGuardar" placeholder="Nombre del producto..." class="p-2 rounded-lg input-style text-xs flex-1">
+                        <button onclick="guardarProducto()" class="px-3 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-lg text-xs transition">Guardar</button>
+                    </div>
+                    <div id="listaGuardados" class="space-y-1.5 max-h-36 overflow-y-auto pt-2">
+                        <!-- Lista dinámica -->
+                    </div>
                 </div>
 
                 <!-- Gráfico de Desglose -->
-                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-3">
-                    <h3 class="text-md font-bold text-slate-300 text-center">Desglose del Precio de Venta</h3>
-                    <div class="relative w-full h-48 flex justify-center">
+                <div class="card-bg p-6 rounded-2xl shadow-xl space-y-3 no-print">
+                    <h3 class="text-xs font-bold text-slate-400 text-center uppercase tracking-wider">Estructura del Precio</h3>
+                    <div class="relative w-full h-44 flex justify-center">
                         <canvas id="graficoDesglose"></canvas>
                     </div>
                 </div>
@@ -168,9 +225,19 @@
     <script>
         let chart;
 
+        function toggleUsd() {
+            const isUsd = document.getElementById('checkUsd').checked;
+            document.getElementById('divCotizacion').classList.toggle('hidden', !isUsd);
+            document.getElementById('labelCosto').innerText = isUsd ? 'Costo Unitario (USD)' : 'Costo Unitario ($)';
+            calcular();
+        }
+
         function calcular() {
-            // Entradas
-            const costoProd = parseFloat(document.getElementById('costoProducto').value) || 0;
+            const isUsd = document.getElementById('checkUsd').checked;
+            const cotiz = parseFloat(document.getElementById('cotizacionUsd').value) || 1;
+            let costoInput = parseFloat(document.getElementById('costoProducto').value) || 0;
+            
+            const costoProd = isUsd ? costoInput * cotiz : costoInput;
             const comisionPct = parseFloat(document.getElementById('comisionPlataforma').value) || 0;
             const envio = parseFloat(document.getElementById('gastosEnvio').value) || 0;
             const margenPct = parseFloat(document.getElementById('margenDeseado').value) || 0;
@@ -182,24 +249,27 @@
             const fijosPorUnidad = fijosMensuales / ventasMensuales;
             document.getElementById('incidenciaFijos').innerText = `$${fijosPorUnidad.toFixed(2)}`;
 
-            // Costo Base Acumulado
+            // Costo Base Total acumulado por producto
             const costoBaseTotal = costoProd + envio + fijosPorUnidad;
 
-            // Fórmula Precio de Venta para garantizar el margen deseado post comisiones
-            // Precio = CostoTotal / (1 - (Comision% + Margen%)/100)
+            // Precio Venta
             const divisor = 1 - ((comisionPct + margenPct) / 100);
-            
-            let precioVenta = 0;
-            if (divisor > 0) {
-                precioVenta = costoBaseTotal / divisor;
-            } else {
-                precioVenta = costoBaseTotal * 2; // Resguardo en caso de porcentaje irreal
-            }
+            let precioVenta = divisor > 0 ? (costoBaseTotal / divisor) : (costoBaseTotal * 2);
 
             const comisionMonto = precioVenta * (comisionPct / 100);
             const gananciaNeta = precioVenta - costoBaseTotal - comisionMonto;
 
-            // Promoción / Descuento
+            // Punto de Equilibrio (Cant. de unidades necesarias para cubrir Costos Fijos)
+            // Margen de contribucion unitario = PrecioVenta - CostoDirecto - Comision - Envio
+            const contribucionUnitaria = precioVenta - costoProd - envio - comisionMonto;
+            const peUnidades = contribucionUnitaria > 0 ? Math.ceil(fijosMensuales / contribucionUnitaria) : 0;
+            document.getElementById('puntoEquilibrio').innerText = `${peUnidades} unid.`;
+
+            // ROI (Retorno de Inversión)
+            const roi = costoBaseTotal > 0 ? ((gananciaNeta / costoBaseTotal) * 100) : 0;
+            document.getElementById('badgeRoi').innerText = `ROI: ${roi.toFixed(1)}%`;
+
+            // Promoción
             const descPct = parseFloat(document.getElementById('descSimulado').value) || 0;
             const precioPromo = precioVenta * (1 - (descPct / 100));
 
@@ -209,48 +279,33 @@
             document.getElementById('resCostoTotal').innerText = `$${(costoBaseTotal + comisionMonto).toFixed(2)}`;
             document.getElementById('resPrecioPromo').innerText = `$${precioPromo.toFixed(2)}`;
 
-            // Salud del Margen (Color indicador)
+            // Salud del Margen
             const cardGanancia = document.getElementById('cardGanancia');
-            if (margenPct < 15) {
-                cardGanancia.className = "p-3 rounded-xl border bg-red-950/40 border-red-800";
-            } else if (margenPct < 30) {
-                cardGanancia.className = "p-3 rounded-xl border bg-amber-950/40 border-amber-800";
-            } else {
-                cardGanancia.className = "p-3 rounded-xl border bg-emerald-950/40 border-emerald-800";
-            }
+            if (margenPct < 15) cardGanancia.className = "p-3 rounded-xl border bg-red-950/40 border-red-800";
+            else if (margenPct < 30) cardGanancia.className = "p-3 rounded-xl border bg-amber-950/40 border-amber-800";
+            else cardGanancia.className = "p-3 rounded-xl border bg-emerald-950/40 border-emerald-800";
 
-            // Actualizar Gráfico
+            // Multicanal
+            document.getElementById('ganDirecta').innerText = `$${(precioVenta - costoBaseTotal).toFixed(2)}`;
+            document.getElementById('ganTN').innerText = `$${(precioVenta - costoBaseTotal - (precioVenta * 0.035)).toFixed(2)}`;
+            document.getElementById('ganML').innerText = `$${(precioVenta - costoBaseTotal - (precioVenta * 0.14)).toFixed(2)}`;
+
             actualizarGrafico(costoProd, envio + fijosPorUnidad, comisionMonto, gananciaNeta);
         }
 
-        function setComision(val) {
-            document.getElementById('comisionPlataforma').value = val;
-            calcular();
-        }
-
-        function setEnvio(val) {
-            document.getElementById('gastosEnvio').value = val;
-            calcular();
-        }
+        function setComision(val) { document.getElementById('comisionPlataforma').value = val; calcular(); }
+        function setEnvio(val) { document.getElementById('gastosEnvio').value = val; calcular(); }
 
         function actualizarGrafico(costo, enviosFijos, comision, ganancia) {
             const ctx = document.getElementById('graficoDesglose').getContext('2d');
-            
-            if (chart) {
-                chart.destroy();
-            }
+            if (chart) chart.destroy();
 
             chart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Costo Producto', 'Envío/Fijos', 'Comisiones', 'Ganancia Neta'],
+                    labels: ['Costo Producto', 'Envío/Fijos', 'Comisión', 'Ganancia Neta'],
                     datasets: [{
-                        data: [
-                            Math.max(0, costo), 
-                            Math.max(0, enviosFijos), 
-                            Math.max(0, comision), 
-                            Math.max(0, ganancia)
-                        ],
+                        data: [Math.max(0, costo), Math.max(0, enviosFijos), Math.max(0, comision), Math.max(0, ganancia)],
                         backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6', '#10b981'],
                         borderWidth: 0
                     }]
@@ -258,12 +313,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { color: '#cbd5e1', boxWidth: 12, font: { size: 11 } }
-                        }
-                    }
+                    plugins: { legend: { position: 'bottom', labels: { color: '#cbd5e1', boxWidth: 10, font: { size: 10 } } } }
                 }
             });
         }
@@ -273,15 +323,69 @@
             const ganancia = document.getElementById('resGananciaNeta').innerText;
             const promo = document.getElementById('resPrecioPromo').innerText;
             
-            const texto = `📊 *Resumen de Cotización*\n• Precio Sugerido: ${precio}\n• Ganancia Neta: ${ganancia}\n• Precio con Promoción: ${promo}`;
-            
-            navigator.clipboard.writeText(texto).then(() => {
-                alert("¡Resumen copiado al portapapeles!");
-            });
+            const texto = `📊 *Cotización de Producto*\n• Precio Venta: ${precio}\n• Ganancia Neta: ${ganancia}\n• Precio Promocional: ${promo}`;
+            navigator.clipboard.writeText(texto).then(() => alert("¡Resumen copiado para WhatsApp!"));
         }
 
-        // Ejecutar primer cálculo al cargar
-        window.onload = calcular;
+        // Sistema de Guardado Local
+        function guardarProducto() {
+            const nombre = document.getElementById('nombreProdGuardar').value.trim();
+            if (!nombre) return alert("Ingresá un nombre para el producto");
+
+            const item = {
+                nombre,
+                costo: document.getElementById('costoProducto').value,
+                comision: document.getElementById('comisionPlataforma').value,
+                envio: document.getElementById('gastosEnvio').value,
+                margen: document.getElementById('margenDeseado').value
+            };
+
+            let guardados = JSON.parse(localStorage.getItem('prods_guardados') || '[]');
+            guardados.push(item);
+            localStorage.setItem('prods_guardados', JSON.stringify(guardados));
+            document.getElementById('nombreProdGuardar').value = '';
+            renderGuardados();
+        }
+
+        function cargarProducto(index) {
+            let guardados = JSON.parse(localStorage.getItem('prods_guardados') || '[]');
+            const p = guardados[index];
+            if (!p) return;
+
+            document.getElementById('costoProducto').value = p.costo;
+            document.getElementById('comisionPlataforma').value = p.comision;
+            document.getElementById('gastosEnvio').value = p.envio;
+            document.getElementById('margenDeseado').value = p.margen;
+            calcular();
+        }
+
+        function borrarProducto(index) {
+            let guardados = JSON.parse(localStorage.getItem('prods_guardados') || '[]');
+            guardados.splice(index, 1);
+            localStorage.setItem('prods_guardados', JSON.stringify(guardados));
+            renderGuardados();
+        }
+
+        function renderGuardados() {
+            let guardados = JSON.parse(localStorage.getItem('prods_guardados') || '[]');
+            const cont = document.getElementById('listaGuardados');
+            if (guardados.length === 0) {
+                cont.innerHTML = `<span class="text-xs text-slate-500 block text-center">No hay productos guardados</span>`;
+                return;
+            }
+
+            cont.innerHTML = guardados.map((p, i) => `
+                <div class="flex justify-between items-center bg-slate-900/80 p-2 rounded-lg border border-slate-800 text-xs">
+                    <span class="font-medium text-slate-300 truncate cursor-pointer hover:text-blue-400" onclick="cargarProducto(${i})">${p.nombre}</span>
+                    <button onclick="borrarProducto(${i})" class="text-red-400 hover:text-red-300 ml-2"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        window.onload = function() {
+            calcular();
+            renderGuardados();
+        };
     </script>
 </body>
 </html>
