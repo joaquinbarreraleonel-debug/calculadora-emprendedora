@@ -111,7 +111,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2" id="labelCosto">Costo Unitario ($)</label>
-                            <input type="number" id="costoProducto" value="5000" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold" placeholder="Ej: 5000" oninput="calcular()">
+                            <input type="number" min="0" step="0.01" id="costoProducto" value="5000" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold" placeholder="Ej: 5000" oninput="calcular()">
                         </div>
                         <div id="divCotizacion" class="hidden space-y-1">
                             <div class="flex justify-between items-center mb-1">
@@ -120,7 +120,7 @@
                                     <i class="fa-solid fa-rotate text-[10px]"></i> Actualizar
                                 </button>
                             </div>
-                            <input type="number" id="cotizacionUsd" value="1300" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold text-emerald-400" placeholder="Ej: 1300" oninput="calcular()">
+                            <input type="number" min="0.01" step="0.01" id="cotizacionUsd" value="1300" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold text-emerald-400" placeholder="Ej: 1300" oninput="calcular()">
                         </div>
                     </div>
 
@@ -130,7 +130,7 @@
                             <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Comisión Plataforma (%)</label>
                             <span class="text-[10px] text-emerald-300 bg-emerald-950/80 border border-emerald-800/50 px-2.5 py-0.5 rounded-full font-medium">Afecta precio final</span>
                         </div>
-                        <input type="number" id="comisionPlataforma" value="0" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold" placeholder="Ej: 14" oninput="calcular()">
+                        <input type="number" min="0" max="99.99" step="0.1" id="comisionPlataforma" value="0" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold" placeholder="Ej: 14" oninput="calcular()">
                         <div class="flex flex-wrap gap-2 pt-1">
                             <button onclick="setComision(14)" class="btn-glow text-xs bg-slate-900/90 hover:bg-emerald-950/80 text-emerald-300 py-2 px-3.5 rounded-xl border border-emerald-500/30 font-medium">Mercado Libre (14%)</button>
                             <button onclick="setComision(6.5)" class="btn-glow text-xs bg-slate-900/90 hover:bg-emerald-950/80 text-emerald-300 py-2 px-3.5 rounded-xl border border-emerald-500/30 font-medium">Mercado Pago (6.5%)</button>
@@ -142,7 +142,7 @@
                     <!-- Envíos -->
                     <div class="space-y-2">
                         <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Gastos de Envío o Embalaje ($)</label>
-                        <input type="number" id="gastosEnvio" value="0" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold" placeholder="Ej: 800" oninput="calcular()">
+                        <input type="number" min="0" step="0.01" id="gastosEnvio" value="0" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold" placeholder="Ej: 800" oninput="calcular()">
                         <div class="flex flex-wrap gap-2 pt-1">
                             <button onclick="setEnvio(500)" class="btn-glow text-xs bg-slate-900/90 hover:bg-slate-800 text-slate-300 py-2 px-3.5 rounded-xl border border-slate-700/50 font-medium">Bolsa/Caja ($500)</button>
                             <button onclick="setEnvio(1500)" class="btn-glow text-xs bg-slate-900/90 hover:bg-slate-800 text-slate-300 py-2 px-3.5 rounded-xl border border-slate-700/50 font-medium">Moto Local ($1500)</button>
@@ -153,7 +153,7 @@
                     <!-- Margen -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Margen de Ganancia Deseado (%)</label>
-                        <input type="number" id="margenDeseado" value="40" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold text-emerald-400" placeholder="Ej: 40" oninput="calcular()">
+                        <input type="number" min="0" max="99.99" step="0.1" id="margenDeseado" value="40" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold text-emerald-400" placeholder="Ej: 40" oninput="calcular()">
                     </div>
                 </div>
 
@@ -168,11 +168,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Costos Fijos Mensuales ($)</label>
-                            <input type="number" id="costosFijosMensuales" value="0" class="w-full p-3.5 rounded-2xl input-style text-base font-semibold" placeholder="Alquiler, luz, web..." oninput="calcular()">
+                            <input type="number" min="0" step="0.01" id="costosFijosMensuales" value="0" class="w-full p-3.5 rounded-2xl input-style text-base font-semibold" placeholder="Alquiler, luz, web..." oninput="calcular()">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Ventas Est. (Unidades/Mes)</label>
-                            <input type="number" id="ventasEstimadas" value="1" class="w-full p-3.5 rounded-2xl input-style text-base font-semibold" placeholder="Ej: 50" oninput="calcular()">
+                            <input type="number" min="1" step="1" id="ventasEstimadas" value="1" class="w-full p-3.5 rounded-2xl input-style text-base font-semibold" placeholder="Ej: 50" oninput="calcular()">
                         </div>
                     </div>
 
@@ -202,10 +202,12 @@
                         <span id="badgeRoi" class="text-xs bg-emerald-950/90 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-full font-bold shadow-sm">ROI: 0%</span>
                     </div>
 
+                    <p id="mensajeErrorCalculo" role="alert" class="hidden text-sm text-rose-200 bg-rose-950/60 border border-rose-500/40 rounded-xl p-3"></p>
                     <div class="glass-card-sm p-5 rounded-2xl border border-emerald-500/30 text-center relative overflow-hidden bg-gradient-to-b from-emerald-950/40 to-slate-900/80">
                         <div class="absolute -right-8 -top-8 w-28 h-28 bg-emerald-500/15 rounded-full blur-2xl"></div>
                         <span class="text-xs text-slate-300 uppercase tracking-widest font-bold block">Precio de Venta Sugerido</span>
-                        <div class="text-4xl md:text-5xl font-black text-emerald-400 mt-1 tracking-tight drop-shadow-lg" id="resPrecioVenta">$0.00</div>
+                        <div class="text-4xl md:text-5xl font-black text-emerald-400 mt-1 tracking-tight drop-shadow-lg" id="resPrecioVenta">$0,00</div>
+                        <p class="text-[11px] text-slate-400 mt-2">Margen calculado sobre el precio de venta; los costos fijos se distribuyen según las unidades mensuales estimadas.</p>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
@@ -223,7 +225,7 @@
                     <div class="pt-3 border-t border-slate-700/60 space-y-4 no-print">
                         <div class="flex gap-2 items-center justify-between glass-card-sm p-3 rounded-2xl">
                             <label class="text-xs text-slate-300 font-medium">Simular Promo (%):</label>
-                            <input type="number" id="descSimulado" value="10" class="p-1.5 rounded-xl input-style text-xs w-20 text-center font-bold" oninput="calcular()">
+                            <input type="number" min="0" max="99.99" step="0.1" id="descSimulado" value="10" class="p-1.5 rounded-xl input-style text-xs w-20 text-center font-bold" oninput="calcular()">
                             <div class="text-right text-xs">
                                 <span class="text-slate-400 block text-[10px]">Precio Promo:</span> 
                                 <strong id="resPrecioPromo" class="text-emerald-300 text-sm font-bold">$0.00</strong>
@@ -246,6 +248,7 @@
                     <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
                         <i class="fa-solid fa-store text-emerald-400"></i> Ganancia Limpia según Canal
                     </h3>
+                    <p class="text-[11px] text-slate-400">Estimación orientativa con comisiones fijas (0%, 3,5% y 14%); no incluye cargos adicionales de cada canal.</p>
                     <div class="space-y-2 text-xs">
                         <div class="flex justify-between items-center p-3 rounded-2xl glass-card-sm border-slate-800/80">
                             <span class="font-medium text-slate-300">Venta Directa (0%)</span>
@@ -313,6 +316,19 @@
 
     <script>
         let chart;
+        const moneda = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 2 });
+        function formatoMoneda(valor) { return moneda.format(Number.isFinite(valor) ? valor : 0); }
+        function leerNumero(id, fallback = 0) {
+            const el = document.getElementById(id);
+            const valor = Number(el.value);
+            if (!Number.isFinite(valor) || valor < 0) { el.setCustomValidity('Ingresá un número igual o mayor que cero.'); return Number.NaN; }
+            el.setCustomValidity('');
+            return valor;
+        }
+        function leerGuardados() {
+            try { const data = JSON.parse(localStorage.getItem('prods_guardados') || '[]'); return Array.isArray(data) ? data : []; }
+            catch { return []; }
+        }
 
         function toggleUsd() {
             const isUsd = document.getElementById('checkUsd').checked;
@@ -337,52 +353,52 @@
 
         function calcular() {
             const isUsd = document.getElementById('checkUsd').checked;
-            const cotiz = parseFloat(document.getElementById('cotizacionUsd').value) || 1;
-            let costoInput = parseFloat(document.getElementById('costoProducto').value) || 0;
-            
+            const cotiz = leerNumero('cotizacionUsd', 0);
+            const costoInput = leerNumero('costoProducto');
             const costoProd = isUsd ? costoInput * cotiz : costoInput;
-            const comisionPct = parseFloat(document.getElementById('comisionPlataforma').value) || 0;
-            const envio = parseFloat(document.getElementById('gastosEnvio').value) || 0;
-            const margenPct = parseFloat(document.getElementById('margenDeseado').value) || 0;
-
-            const fijosMensuales = parseFloat(document.getElementById('costosFijosMensuales').value) || 0;
-            const ventasMensuales = Math.max(1, parseFloat(document.getElementById('ventasEstimadas').value) || 1);
-
-            const fijosPorUnidad = fijosMensuales / ventasMensuales;
-            document.getElementById('incidenciaFijos').innerText = `$${fijosPorUnidad.toFixed(2)}`;
-
-            const costoBaseTotal = costoProd + envio + fijosPorUnidad;
-
+            const comisionPct = leerNumero('comisionPlataforma');
+            const envio = leerNumero('gastosEnvio');
+            const margenPct = leerNumero('margenDeseado');
+            const fijosMensuales = leerNumero('costosFijosMensuales');
+            const ventasMensuales = Math.max(1, leerNumero('ventasEstimadas', 1));
+            const descPct = leerNumero('descSimulado');
+            const error = document.getElementById('mensajeErrorCalculo');
             const divisor = 1 - ((comisionPct + margenPct) / 100);
-            let precioVenta = divisor > 0 ? (costoBaseTotal / divisor) : (costoBaseTotal * 2);
-
+            if (![cotiz, costoInput, comisionPct, envio, margenPct, fijosMensuales, ventasMensuales, descPct].every(Number.isFinite) || comisionPct > 100 || margenPct > 100 || descPct > 100 || (isUsd && cotiz <= 0) || divisor <= 0) {
+                error.textContent = divisor <= 0 ? 'La comisión más el margen debe ser menor al 100% para calcular un precio válido.' : 'Revisá los valores: ingresá números válidos no negativos, porcentajes menores a 100 y cotización mayor que cero.';
+                error.classList.remove('hidden');
+                ['resPrecioVenta','resGananciaNeta','resCostoTotal','resPrecioPromo','ganDirecta','ganTN','ganML'].forEach(id => document.getElementById(id).textContent = '—');
+                document.getElementById('incidenciaFijos').textContent = '—';
+                document.getElementById('puntoEquilibrio').textContent = '—';
+                document.getElementById('badgeRoi').textContent = 'ROI: —';
+                if (chart) { chart.destroy(); chart = null; }
+                return;
+            }
+            error.classList.add('hidden');
+            const fijosPorUnidad = fijosMensuales / ventasMensuales;
+            document.getElementById('incidenciaFijos').innerText = formatoMoneda(fijosPorUnidad);
+            const costoBaseTotal = costoProd + envio + fijosPorUnidad;
+            const precioVenta = costoBaseTotal / divisor;
             const comisionMonto = precioVenta * (comisionPct / 100);
             const gananciaNeta = precioVenta - costoBaseTotal - comisionMonto;
-
+            // El punto de equilibrio usa la contribución por unidad antes de asignar costos fijos.
             const contribucionUnitaria = precioVenta - costoProd - envio - comisionMonto;
-            const peUnidades = contribucionUnitaria > 0 ? Math.ceil(fijosMensuales / contribucionUnitaria) : 0;
-            document.getElementById('puntoEquilibrio').innerText = `${peUnidades} unid.`;
-
+            const peUnidades = contribucionUnitaria > 0 ? Math.ceil(fijosMensuales / contribucionUnitaria) : (fijosMensuales === 0 ? 0 : null);
+            document.getElementById('puntoEquilibrio').innerText = peUnidades === null ? 'No alcanzable' : `${peUnidades} unid.`;
             const roi = costoBaseTotal > 0 ? ((gananciaNeta / costoBaseTotal) * 100) : 0;
             document.getElementById('badgeRoi').innerText = `ROI: ${roi.toFixed(1)}%`;
-
-            const descPct = parseFloat(document.getElementById('descSimulado').value) || 0;
             const precioPromo = precioVenta * (1 - (descPct / 100));
-
-            document.getElementById('resPrecioVenta').innerText = `$${precioVenta.toFixed(2)}`;
-            document.getElementById('resGananciaNeta').innerText = `$${gananciaNeta.toFixed(2)}`;
-            document.getElementById('resCostoTotal').innerText = `$${(costoBaseTotal + comisionMonto).toFixed(2)}`;
-            document.getElementById('resPrecioPromo').innerText = `$${precioPromo.toFixed(2)}`;
-
+            document.getElementById('resPrecioVenta').innerText = formatoMoneda(precioVenta);
+            document.getElementById('resGananciaNeta').innerText = formatoMoneda(gananciaNeta);
+            document.getElementById('resCostoTotal').innerText = formatoMoneda(costoBaseTotal + comisionMonto);
+            document.getElementById('resPrecioPromo').innerText = formatoMoneda(precioPromo);
             const cardGanancia = document.getElementById('cardGanancia');
-            if (margenPct < 15) cardGanancia.className = "p-4 rounded-2xl border glass-card-sm border-rose-500/40 bg-rose-950/20";
-            else if (margenPct < 30) cardGanancia.className = "p-4 rounded-2xl border glass-card-sm border-amber-500/40 bg-amber-950/20";
-            else cardGanancia.className = "p-4 rounded-2xl border glass-card-sm border-emerald-500/40 bg-emerald-950/20";
-
-            document.getElementById('ganDirecta').innerText = `$${(precioVenta - costoBaseTotal).toFixed(2)}`;
-            document.getElementById('ganTN').innerText = `$${(precioVenta - costoBaseTotal - (precioVenta * 0.035)).toFixed(2)}`;
-            document.getElementById('ganML').innerText = `$${(precioVenta - costoBaseTotal - (precioVenta * 0.14)).toFixed(2)}`;
-
+            if (margenPct < 15) cardGanancia.className = 'p-4 rounded-2xl border glass-card-sm border-rose-500/40 bg-rose-950/20';
+            else if (margenPct < 30) cardGanancia.className = 'p-4 rounded-2xl border glass-card-sm border-amber-500/40 bg-amber-950/20';
+            else cardGanancia.className = 'p-4 rounded-2xl border glass-card-sm border-emerald-500/40 bg-emerald-950/20';
+            document.getElementById('ganDirecta').innerText = formatoMoneda(precioVenta - costoBaseTotal);
+            document.getElementById('ganTN').innerText = formatoMoneda(precioVenta - costoBaseTotal - (precioVenta * 0.035));
+            document.getElementById('ganML').innerText = formatoMoneda(precioVenta - costoBaseTotal - (precioVenta * 0.14));
             actualizarGrafico(costoProd, envio + fijosPorUnidad, comisionMonto, gananciaNeta);
         }
 
@@ -417,7 +433,7 @@
             const promo = document.getElementById('resPrecioPromo').innerText;
             
             const texto = `📊 *Cotización de Producto*\n• Precio Venta: ${precio}\n• Ganancia Neta: ${ganancia}\n• Precio Promocional: ${promo}`;
-            navigator.clipboard.writeText(texto).then(() => alert("¡Resumen copiado para WhatsApp!"));
+            if (navigator.clipboard) navigator.clipboard.writeText(texto).then(() => alert("¡Resumen copiado para WhatsApp!")).catch(() => alert("No se pudo copiar automáticamente. Probá desde una página segura (HTTPS).")); else alert("El navegador no habilitó el portapapeles. Abrí la página con HTTPS o copiá el resumen manualmente.");
         }
 
         function compartirWhatsApp() {
@@ -428,74 +444,56 @@
 
         function guardarProducto() {
             const nombre = document.getElementById('nombreProdGuardar').value.trim();
-            if (!nombre) return alert("Ingresá un nombre para el producto");
-
+            if (!nombre) return alert('Ingresá un nombre para el producto');
             const item = {
-                nombre,
-                costo: document.getElementById('costoProducto').value,
-                comision: document.getElementById('comisionPlataforma').value,
-                envio: document.getElementById('gastosEnvio').value,
-                margen: document.getElementById('margenDeseado').value
+                nombre, costo: document.getElementById('costoProducto').value,
+                comision: document.getElementById('comisionPlataforma').value, envio: document.getElementById('gastosEnvio').value,
+                margen: document.getElementById('margenDeseado').value, usd: document.getElementById('checkUsd').checked,
+                cotizacion: document.getElementById('cotizacionUsd').value, fijos: document.getElementById('costosFijosMensuales').value,
+                ventas: document.getElementById('ventasEstimadas').value, descuento: document.getElementById('descSimulado').value
             };
-
-            let guardados = JSON.parse(localStorage.getItem('prods_guardados') || '[]');
-            guardados.push(item);
+            const guardados = leerGuardados(); guardados.push(item);
             localStorage.setItem('prods_guardados', JSON.stringify(guardados));
-            document.getElementById('nombreProdGuardar').value = '';
-            renderGuardados();
+            document.getElementById('nombreProdGuardar').value = ''; renderGuardados();
         }
-
         function cargarProducto(index) {
-            let guardados = JSON.parse(localStorage.getItem('prods_guardados') || '[]');
-            const p = guardados[index];
-            if (!p) return;
-
-            document.getElementById('costoProducto').value = p.costo;
-            document.getElementById('comisionPlataforma').value = p.comision;
-            document.getElementById('gastosEnvio').value = p.envio;
-            document.getElementById('margenDeseado').value = p.margen;
+            const p = leerGuardados()[index]; if (!p) return;
+            document.getElementById('costoProducto').value = p.costo ?? 0;
+            document.getElementById('comisionPlataforma').value = p.comision ?? 0;
+            document.getElementById('gastosEnvio').value = p.envio ?? 0;
+            document.getElementById('margenDeseado').value = p.margen ?? 0;
+            document.getElementById('checkUsd').checked = Boolean(p.usd);
+            document.getElementById('divCotizacion').classList.toggle('hidden', !p.usd);
+            document.getElementById('labelCosto').innerText = p.usd ? 'Costo Unitario (USD)' : 'Costo Unitario ($)';
+            if (p.cotizacion !== undefined) document.getElementById('cotizacionUsd').value = p.cotizacion;
+            if (p.fijos !== undefined) document.getElementById('costosFijosMensuales').value = p.fijos;
+            if (p.ventas !== undefined) document.getElementById('ventasEstimadas').value = p.ventas;
+            if (p.descuento !== undefined) document.getElementById('descSimulado').value = p.descuento;
             calcular();
         }
-
         function borrarProducto(index) {
-            let guardados = JSON.parse(localStorage.getItem('prods_guardados') || '[]');
-            guardados.splice(index, 1);
-            localStorage.setItem('prods_guardados', JSON.stringify(guardados));
-            renderGuardados();
+            const guardados = leerGuardados(); guardados.splice(index, 1);
+            localStorage.setItem('prods_guardados', JSON.stringify(guardados)); renderGuardados();
         }
-
         function renderGuardados() {
-            let guardados = JSON.parse(localStorage.getItem('prods_guardados') || '[]');
-            const cont = document.getElementById('listaGuardados');
-            if (guardados.length === 0) {
-                cont.innerHTML = `<span class="text-xs text-slate-500 block text-center py-2">No hay productos guardados</span>`;
-                return;
-            }
-
-            cont.innerHTML = guardados.map((p, i) => `
-                <div class="flex justify-between items-center glass-card-sm p-2.5 rounded-xl border border-slate-800 text-xs">
-                    <span class="font-medium text-slate-300 truncate cursor-pointer hover:text-emerald-400" onclick="cargarProducto(${i})">${p.nombre}</span>
-                    <button onclick="borrarProducto(${i})" class="text-rose-400 hover:text-rose-300 ml-2"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            `).join('');
-        }
-
-        function exportarCSV() {
-            let guardados = JSON.parse(localStorage.getItem('prods_guardados') || '[]');
-            if (guardados.length === 0) return alert("No hay productos guardados para exportar.");
-
-            let csvContent = "data:text/csv;charset=utf-8,Producto,Costo,Comision(%),Envio,Margen(%)\n";
-            guardados.forEach(p => {
-                csvContent += `"${p.nombre}",${p.costo},${p.comision},${p.envio},${p.margen}\n`;
+            const guardados = leerGuardados(); const cont = document.getElementById('listaGuardados');
+            cont.replaceChildren();
+            if (!guardados.length) { const span = document.createElement('span'); span.className = 'text-xs text-slate-500 block text-center py-2'; span.textContent = 'No hay productos guardados'; cont.appendChild(span); return; }
+            guardados.forEach((p, i) => {
+                const row = document.createElement('div'); row.className = 'flex justify-between items-center glass-card-sm p-2.5 rounded-xl border border-slate-800 text-xs';
+                const title = document.createElement('button'); title.type = 'button'; title.className = 'font-medium text-slate-300 truncate cursor-pointer hover:text-emerald-400'; title.textContent = p.nombre; title.addEventListener('click', () => cargarProducto(i));
+                const del = document.createElement('button'); del.type = 'button'; del.className = 'text-rose-400 hover:text-rose-300 ml-2'; del.setAttribute('aria-label', `Borrar ${p.nombre}`); del.textContent = 'Borrar'; del.addEventListener('click', () => borrarProducto(i));
+                row.append(title, del); cont.appendChild(row);
             });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "catalogo_productos.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        }
+        function exportarCSV() {
+            const guardados = leerGuardados();
+            if (!guardados.length) return alert('No hay productos guardados para exportar.');
+            const campo = v => `"${String(v ?? '').replaceAll('"', '""')}"`;
+            const filas = [['Producto','Costo','Comision (%)','Envio','Margen (%)','Moneda USD','Cotizacion','Costos fijos','Ventas estimadas'], ...guardados.map(p => [p.nombre,p.costo,p.comision,p.envio,p.margen,p.usd ? 'Sí' : 'No',p.cotizacion,p.fijos,p.ventas])];
+            const csv = '\uFEFF' + filas.map(f => f.map(campo).join(';')).join('\r\n');
+            const url = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'}));
+            const link = document.createElement('a'); link.href = url; link.download = 'catalogo_productos.csv'; link.click(); URL.revokeObjectURL(url);
         }
 
         window.onload = function() {
