@@ -78,6 +78,21 @@
             .glass-card { border-radius: 1.25rem; }
             #resPrecioVenta { font-size: clamp(2rem, 10vw, 3rem); overflow-wrap: anywhere; }
         }
+        #toastRegion { position: fixed; z-index: 100; right: 1rem; bottom: 1rem; max-width: min(92vw, 26rem); }
+        .toast-item { background: #0f172a; color: #f8fafc; border: 1px solid #34d399; box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+        [data-theme="light"] { background: #f1f5f9 !important; color: #0f172a !important; }
+        [data-theme="light"] .glass-card { background: rgba(255,255,255,.97); border-color: #cbd5e1; box-shadow: 0 8px 24px rgba(15,23,42,.08); }
+        [data-theme="light"] .glass-card-sm { background: #f8fafc; border-color: #cbd5e1; }
+        [data-theme="light"] .input-style { background: #fff; color: #0f172a; border-color: #94a3b8; }
+        [data-theme="light"] .text-slate-200, [data-theme="light"] .text-slate-300, [data-theme="light"] .text-slate-400, [data-theme="light"] .text-slate-500 { color: #334155 !important; }
+        [data-theme="light"] .text-emerald-300 { color: #047857 !important; }
+        [data-theme="light"] .text-teal-200 { color: #0f766e !important; }
+        [data-theme="light"] .text-amber-300 { color: #92400e !important; }
+        [data-theme="light"] .text-emerald-400 { color: #047857 !important; }
+        [data-theme="light"] .bg-slate-900\/80, [data-theme="light"] .bg-slate-900\/90 { background-color: #e2e8f0 !important; }
+        [data-theme="light"] .bg-slate-800 { background-color: #e2e8f0 !important; color: #0f172a !important; }
+        [data-theme="light"] .toast-item { background: #fff; color: #0f172a; }
+        @media (max-width: 767px) { body { padding-bottom: 5.5rem !important; } #mobileResultBar { display:flex; } }
         @media print {
             body { background: white !important; color: black !important; }
             details { display: block !important; }
@@ -102,6 +117,12 @@
             <p class="text-slate-300 text-sm md:text-base max-w-2xl mx-auto font-normal">
                 Optimizá tus costos, precios de venta, comisiones de cobro y punto de equilibrio en tiempo real.
             </p>
+            <p class="text-xs text-slate-300 max-w-2xl mx-auto">Empezá por el costo y el margen; comisiones, envío e impuestos son opcionales. Los valores iniciales son solo de ejemplo, no cotizaciones reales.</p>
+            <div class="flex flex-wrap justify-center gap-2 pt-2">
+                <button type="button" onclick="cargarEjemplo()" class="px-3 py-2 rounded-xl text-xs bg-emerald-700 hover:bg-emerald-600 text-white">Cargar ejemplo</button>
+                <button type="button" id="temaToggle" onclick="alternarTema()" class="px-3 py-2 rounded-xl text-xs bg-slate-800 border border-slate-600 text-white">Tema claro</button>
+                <button type="button" onclick="irAResultado()" class="md:hidden px-3 py-2 rounded-xl text-xs bg-slate-700 text-white">Ver resultado</button>
+            </div>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -223,7 +244,7 @@
             <div class="lg:col-span-5 space-y-6">
                 
                 <!-- Panel Principal de Resultados -->
-                <div class="glass-card p-6 md:p-8 rounded-3xl space-y-5 border-emerald-500/30 shadow-2xl shadow-emerald-950/50">
+                <div id="panelResultados" class="glass-card p-6 md:p-8 rounded-3xl space-y-5 border-emerald-500/30 shadow-2xl shadow-emerald-950/50">
                     <div class="flex justify-between items-center">
                         <h2 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
                             <i class="fa-solid fa-chart-line"></i> Resumen de Venta
@@ -266,7 +287,7 @@
                     <div class="pt-3 border-t border-slate-700/60 space-y-4 no-print">
                         <div class="flex gap-2 items-center justify-between glass-card-sm p-3 rounded-2xl">
                             <label class="text-xs text-slate-300 font-medium">Simular Promo (%):</label>
-                            <input type="number" min="0" max="99.99" step="0.1" id="descSimulado" value="10" class="p-1.5 rounded-xl input-style text-xs w-20 text-center font-bold" oninput="calcular()">
+                            <input type="number" aria-label="Porcentaje de descuento promocional" min="0" max="99.99" step="0.1" id="descSimulado" value="10" class="p-1.5 rounded-xl input-style text-xs w-20 text-center font-bold" oninput="calcular()">
                             <div class="text-right text-xs">
                                 <span class="text-slate-400 block text-[10px]">Precio Promo:</span> 
                                 <strong id="resPrecioPromo" class="text-emerald-300 text-sm font-bold">$0.00</strong>
@@ -332,6 +353,7 @@
                         <input type="text" id="nombreProdGuardar" aria-label="Nombre del producto para guardar" placeholder="Nombre del producto..." class="p-3 rounded-xl input-style text-xs flex-1">
                         <button onclick="guardarProducto()" class="btn-glow px-4 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-xs transition text-white">Guardar</button>
                     </div>
+                    <p class="text-[11px] text-slate-300">El catálogo se guarda solo en este navegador y dispositivo. Descargá un respaldo JSON para trasladarlo o recuperarlo.</p>
                     <div id="listaGuardados" class="space-y-2 max-h-36 overflow-y-auto pt-1">
                         <!-- Lista dinámica -->
                     </div>
@@ -356,6 +378,12 @@
             </div>
 
         </div>
+    </div>
+
+    <div id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+    <div id="mobileResultBar" class="hidden fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 border-t border-emerald-500/40 px-4 py-3 items-center justify-between gap-3 shadow-2xl">
+        <div><span class="text-[10px] uppercase tracking-wide text-slate-300 block">Precio sugerido</span><strong id="precioMovil" class="text-lg text-emerald-300">—</strong></div>
+        <button type="button" onclick="irAResultado()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold">Ver detalle</button>
     </div>
 
     <!-- Footer Comercial -->
@@ -387,6 +415,27 @@
             const n = Number(modo); if (!n) return precio;
             if (n === 99 || n === 90) { const base = Math.floor(precio / 100) * 100; const candidato = base + n; return candidato >= precio ? candidato : base + 100 + n; }
             return Math.ceil(precio / n) * n;
+        }
+
+        let toastTimer; let ultimoBorrado = null;
+        function mostrarAviso(mensaje, etiquetaAccion = '', accion = null) {
+            const region = document.getElementById('toastRegion'); region.replaceChildren();
+            const caja = document.createElement('div'); caja.className = 'toast-item rounded-xl px-4 py-3 text-sm flex items-center gap-3';
+            const texto = document.createElement('span'); texto.textContent = mensaje; caja.appendChild(texto);
+            if (etiquetaAccion && accion) { const btn=document.createElement('button'); btn.type='button'; btn.className='underline font-bold whitespace-nowrap'; btn.textContent=etiquetaAccion; btn.onclick=()=>{accion(); region.replaceChildren();}; caja.appendChild(btn); }
+            region.appendChild(caja); clearTimeout(toastTimer); toastTimer=setTimeout(()=>region.replaceChildren(), 5000);
+        }
+        function irAResultado() { document.getElementById('panelResultados').scrollIntoView({behavior:'smooth',block:'start'}); }
+        function cargarEjemplo() {
+            const datos={costoProducto:'5000',comisionPlataforma:'14',gastosEnvio:'500',margenDeseado:'40',costosFijosMensuales:'100000',ventasEstimadas:'100',descSimulado:'10',impuestosPct:'0',cargoCobroPct:'0',redondeoPrecio:'100',canalDirectoPct:'0',canalTNPct:'3.5',canalMLPct:'14'};
+            Object.entries(datos).forEach(([id,v])=>document.getElementById(id).value=v);
+            document.getElementById('checkUsd').checked=false; document.getElementById('envioVendedor').checked=true;
+            document.getElementById('divCotizacion').classList.add('hidden'); document.getElementById('labelCosto').textContent='Costo Unitario ($)';
+            calcular(); mostrarAviso('Ejemplo cargado. Modificá los valores para adaptarlo a tu producto.');
+        }
+        function alternarTema() {
+            const nuevo=document.body.dataset.theme==='light'?'dark':'light'; document.body.dataset.theme=nuevo; localStorage.setItem('tema_calculadora',nuevo);
+            document.getElementById('temaToggle').textContent=nuevo==='light'?'Tema oscuro':'Tema claro';
         }
 
         function guardarFechaRevision() {
@@ -456,6 +505,7 @@
                 document.getElementById('incidenciaFijos').textContent = '—';
                 document.getElementById('puntoEquilibrio').textContent = '—';
                 document.getElementById('badgeRoi').textContent = 'ROI: —';
+                document.getElementById('precioMovil').textContent = '—';
                 ['desgloseProducto','desgloseEnvio','desgloseFijos','desgloseComision','desgloseImpuestos','desgloseCargos','desgloseGanancia'].forEach(id => document.getElementById(id).textContent = '—');
                 document.getElementById('gananciaPromo').textContent = 'Ganancia con promo: —';
                 if (chart) { chart.destroy(); chart = null; }
@@ -482,6 +532,7 @@
             const peUnidades = contribucionUnitaria > 0 ? Math.ceil(fijosMensuales / contribucionUnitaria) : (fijosMensuales === 0 ? 0 : null);
             document.getElementById('puntoEquilibrio').innerText = peUnidades === null ? 'No alcanzable' : `${peUnidades} unid.`;
             document.getElementById('resPrecioVenta').innerText = formatoMoneda(precioVentaFinal);
+            document.getElementById('precioMovil').textContent = formatoMoneda(precioVentaFinal);
             document.getElementById('resGananciaNeta').innerText = formatoMoneda(gananciaFinal);
             document.getElementById('resCostoTotal').innerText = formatoMoneda(precioVentaFinal - gananciaFinal);
             document.getElementById('gananciaPromo').textContent = `Ganancia con promo: ${formatoMoneda(gananciaPromo)}${gananciaPromo < 0 ? ' — ¡vendés a pérdida!' : ''}`;
@@ -535,7 +586,7 @@
             const promo = document.getElementById('resPrecioPromo').innerText;
             
             const texto = `📊 *Cotización de Producto*\n• Precio Venta: ${precio}\n• Ganancia Neta: ${ganancia}\n• Precio Promocional: ${promo}\n• Ganancia con promo: ${document.getElementById('gananciaPromo').innerText}`;
-            if (navigator.clipboard) navigator.clipboard.writeText(texto).then(() => alert("¡Resumen copiado para WhatsApp!")).catch(() => alert("No se pudo copiar automáticamente. Probá desde una página segura (HTTPS).")); else alert("El navegador no habilitó el portapapeles. Abrí la página con HTTPS o copiá el resumen manualmente.");
+            if (navigator.clipboard) navigator.clipboard.writeText(texto).then(() => mostrarAviso('Resumen copiado al portapapeles.')).catch(() => mostrarAviso('No se pudo copiar; probá desde una página segura (HTTPS).')); else mostrarAviso('El navegador no habilitó el portapapeles; abrí la página con HTTPS.');
         }
 
         function compartirWhatsApp() {
@@ -546,7 +597,7 @@
 
         function guardarProducto() {
             const nombre = document.getElementById('nombreProdGuardar').value.trim();
-            if (!nombre) return alert('Ingresá un nombre para el producto');
+            if (!nombre) { mostrarAviso('Escribí un nombre para guardar el producto.'); document.getElementById('nombreProdGuardar').focus(); return; }
             const item = {
                 nombre, costo: document.getElementById('costoProducto').value,
                 comision: document.getElementById('comisionPlataforma').value, envio: document.getElementById('gastosEnvio').value,
@@ -558,7 +609,7 @@
             };
             const guardados = leerGuardados(); guardados.push(item);
             localStorage.setItem('prods_guardados', JSON.stringify(guardados));
-            document.getElementById('nombreProdGuardar').value = ''; renderGuardados();
+            document.getElementById('nombreProdGuardar').value = ''; renderGuardados(); mostrarAviso(`Producto «${nombre}» guardado.`);
         }
         function cargarProducto(index) {
             const p = leerGuardados()[index]; if (!p) return;
@@ -578,8 +629,9 @@
             calcular();
         }
         function borrarProducto(index) {
-            const guardados = leerGuardados(); guardados.splice(index, 1);
-            localStorage.setItem('prods_guardados', JSON.stringify(guardados)); renderGuardados();
+            const guardados = leerGuardados(); const [producto] = guardados.splice(index, 1); if (!producto) return;
+            ultimoBorrado = {producto, index}; localStorage.setItem('prods_guardados', JSON.stringify(guardados)); renderGuardados();
+            mostrarAviso(`Se borró «${producto.nombre}».`, 'Deshacer', () => { const actuales=leerGuardados(); actuales.splice(Math.min(ultimoBorrado.index,actuales.length),0,ultimoBorrado.producto); localStorage.setItem('prods_guardados',JSON.stringify(actuales)); renderGuardados(); ultimoBorrado=null; });
         }
         function renderGuardados() {
             const guardados = leerGuardados(); const cont = document.getElementById('listaGuardados');
@@ -595,7 +647,7 @@
         function exportarJSON() {
             const contenido = JSON.stringify({version:1, exportado:new Date().toISOString(), productos:leerGuardados()}, null, 2);
             const url = URL.createObjectURL(new Blob([contenido], {type:'application/json'}));
-            const a = document.createElement('a'); a.href = url; a.download = 'respaldo_calculadora.json'; a.click(); URL.revokeObjectURL(url);
+            const a = document.createElement('a'); a.href = url; a.download = 'respaldo_calculadora.json'; a.click(); URL.revokeObjectURL(url); mostrarAviso('Respaldo JSON descargado. Guardalo en un lugar seguro.');
         }
         async function importarJSON(event) {
             const archivo = event.target.files?.[0]; if (!archivo) return;
@@ -603,22 +655,24 @@
                 const data = JSON.parse(await archivo.text()); const lista = Array.isArray(data) ? data : data.productos;
                 if (!Array.isArray(lista) || lista.some(p => !p || typeof p.nombre !== 'string')) throw new Error('Formato inválido');
                 const existente = leerGuardados(); localStorage.setItem('prods_guardados', JSON.stringify([...existente, ...lista])); renderGuardados();
-                alert(`Se importaron ${lista.length} productos.`);
-            } catch { alert('No se pudo importar: el archivo no tiene el formato de respaldo esperado.'); }
+                mostrarAviso(`Se importaron ${lista.length} productos.`);
+            } catch { mostrarAviso('No se pudo importar: el archivo no tiene el formato de respaldo esperado.'); }
             event.target.value = '';
         }
 
         function exportarCSV() {
             const guardados = leerGuardados();
-            if (!guardados.length) return alert('No hay productos guardados para exportar.');
+            if (!guardados.length) { mostrarAviso('Todavía no hay productos guardados para exportar.'); return; }
             const campo = v => `"${String(v ?? '').replaceAll('"', '""')}"`;
             const filas = [['Producto','Costo','Comision (%)','Envio','Margen (%)','Moneda USD','Cotizacion','Costos fijos','Ventas estimadas','Impuestos (%)','Otros cargos (%)','Redondeo','Envío vendedor','Comisión directa','Comisión Tiendanube','Comisión ML'], ...guardados.map(p => [p.nombre,p.costo,p.comision,p.envio,p.margen,p.usd ? 'Sí' : 'No',p.cotizacion,p.fijos,p.ventas,p.impuestos,p.cargo,p.redondeo,p.envioVendedor ? 'Sí' : 'No',p.directa,p.tn,p.ml])];
             const csv = '\uFEFF' + filas.map(f => f.map(campo).join(';')).join('\r\n');
             const url = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'}));
-            const link = document.createElement('a'); link.href = url; link.download = 'catalogo_productos.csv'; link.click(); URL.revokeObjectURL(url);
+            const link = document.createElement('a'); link.href = url; link.download = 'catalogo_productos.csv'; link.click(); URL.revokeObjectURL(url); mostrarAviso('Catálogo CSV descargado.');
         }
 
         window.onload = function() {
+            const temaGuardado=localStorage.getItem('tema_calculadora') || 'dark';
+            document.body.dataset.theme=temaGuardado; document.getElementById('temaToggle').textContent=temaGuardado==='light'?'Tema oscuro':'Tema claro';
             calcular();
             renderGuardados();
             const fechaGuardada = localStorage.getItem('fecha_revision_tarifas');
