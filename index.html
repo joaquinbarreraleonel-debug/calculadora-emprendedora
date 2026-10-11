@@ -120,7 +120,8 @@
                                     <i class="fa-solid fa-rotate text-[10px]"></i> Actualizar
                                 </button>
                             </div>
-                            <input type="number" min="0.01" step="0.01" id="cotizacionUsd" value="1300" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold text-emerald-400" placeholder="Ej: 1300" oninput="calcular()">
+                            <input type="number" min="0.01" step="0.01" id="cotizacionUsd" value="1300" aria-label="Cotización del dólar en pesos" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold text-emerald-400" placeholder="Ej: 1300" oninput="marcarCotizacionManual(); calcular()">
+                            <span id="estadoCotizacion" aria-live="polite" class="text-[10px] text-slate-400">Cotización inicial/manual; verificá el valor.</span>
                         </div>
                     </div>
 
@@ -132,9 +133,9 @@
                         </div>
                         <input type="number" min="0" max="99.99" step="0.1" id="comisionPlataforma" value="0" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold" placeholder="Ej: 14" oninput="calcular()">
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <button onclick="setComision(14)" class="btn-glow text-xs bg-slate-900/90 hover:bg-emerald-950/80 text-emerald-300 py-2 px-3.5 rounded-xl border border-emerald-500/30 font-medium">Mercado Libre (14%)</button>
+                            <button onclick="setComision(14)" class="btn-glow text-xs bg-slate-900/90 hover:bg-emerald-950/80 text-emerald-300 py-2 px-3.5 rounded-xl border border-emerald-500/30 font-medium">Mercado Libre</button>
                             <button onclick="setComision(6.5)" class="btn-glow text-xs bg-slate-900/90 hover:bg-emerald-950/80 text-emerald-300 py-2 px-3.5 rounded-xl border border-emerald-500/30 font-medium">Mercado Pago (6.5%)</button>
-                            <button onclick="setComision(3.5)" class="btn-glow text-xs bg-slate-900/90 hover:bg-emerald-950/80 text-emerald-300 py-2 px-3.5 rounded-xl border border-emerald-500/30 font-medium">Tiendanube (3.5%)</button>
+                            <button onclick="setComision(3.5)" class="btn-glow text-xs bg-slate-900/90 hover:bg-emerald-950/80 text-emerald-300 py-2 px-3.5 rounded-xl border border-emerald-500/30 font-medium">Tiendanube</button>
                             <button onclick="setComision(0)" class="btn-glow text-xs bg-slate-900/90 hover:bg-slate-800 text-slate-400 py-2 px-3.5 rounded-xl border border-slate-700/50 font-medium">Sin comisión</button>
                         </div>
                     </div>
@@ -154,6 +155,12 @@
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Margen de Ganancia Deseado (%)</label>
                         <input type="number" min="0" max="99.99" step="0.1" id="margenDeseado" value="40" class="w-full p-3.5 rounded-2xl input-style text-lg font-semibold text-emerald-400" placeholder="Ej: 40" oninput="calcular()">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <div><label for="impuestosPct" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Impuestos sobre venta (%)</label><input type="number" min="0" max="99.99" step="0.1" id="impuestosPct" value="0" class="w-full p-3 rounded-xl input-style" oninput="calcular()"><p class="text-[10px] text-slate-500 mt-1">Estimación editable; confirmá el tratamiento fiscal con un profesional.</p></div>
+                        <div><label for="cargoCobroPct" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Otros cargos sobre venta (%)</label><input type="number" min="0" max="99.99" step="0.1" id="cargoCobroPct" value="0" class="w-full p-3 rounded-xl input-style" oninput="calcular()"></div>
+                        <div><label for="redondeoPrecio" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Redondear precio sugerido</label><select id="redondeoPrecio" class="w-full p-3 rounded-xl input-style" onchange="calcular()"><option value="0">Sin redondeo</option><option value="10">Al múltiplo de $10</option><option value="100">Al múltiplo de $100</option><option value="500">Al múltiplo de $500</option><option value="99">Finalizar en 99 (mismo centenar)</option><option value="90">Finalizar en 90 (mismo centenar)</option></select></div>
+                        <label class="flex items-center gap-2 text-xs text-slate-300"><input type="checkbox" id="envioVendedor" checked onchange="calcular()" class="accent-emerald-500"> El envío ingresado lo paga el vendedor</label>
                     </div>
                 </div>
 
@@ -229,6 +236,7 @@
                             <div class="text-right text-xs">
                                 <span class="text-slate-400 block text-[10px]">Precio Promo:</span> 
                                 <strong id="resPrecioPromo" class="text-emerald-300 text-sm font-bold">$0.00</strong>
+                                <span id="gananciaPromo" class="block text-[10px] text-slate-300" aria-live="polite">Ganancia con promo: —</span>
                             </div>
                         </div>
 
@@ -248,18 +256,23 @@
                     <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
                         <i class="fa-solid fa-store text-emerald-400"></i> Ganancia Limpia según Canal
                     </h3>
-                    <p class="text-[11px] text-slate-400">Estimación orientativa con comisiones fijas (0%, 3,5% y 14%); no incluye cargos adicionales de cada canal.</p>
+                    <p class="text-[11px] text-slate-400">Configurá las comisiones vigentes para cada canal. Son estimaciones; puede haber cargos adicionales.</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <label class="text-[10px] text-slate-400">Directa %<input id="canalDirectoPct" type="number" min="0" max="99.99" step="0.1" value="0" class="w-full p-2 rounded-lg input-style" oninput="calcular()"></label>
+                        <label class="text-[10px] text-slate-400">Tiendanube %<input id="canalTNPct" type="number" min="0" max="99.99" step="0.1" value="3.5" class="w-full p-2 rounded-lg input-style" oninput="calcular()"></label>
+                        <label class="text-[10px] text-slate-400">Mercado Libre %<input id="canalMLPct" type="number" min="0" max="99.99" step="0.1" value="14" class="w-full p-2 rounded-lg input-style" oninput="calcular()"></label>
+                    </div>
                     <div class="space-y-2 text-xs">
                         <div class="flex justify-between items-center p-3 rounded-2xl glass-card-sm border-slate-800/80">
-                            <span class="font-medium text-slate-300">Venta Directa (0%)</span>
+                            <span class="font-medium text-slate-300">Venta Directa</span>
                             <strong id="ganDirecta" class="text-emerald-400 text-sm font-bold">$0.00</strong>
                         </div>
                         <div class="flex justify-between items-center p-3 rounded-2xl glass-card-sm border-slate-800/80">
-                            <span class="font-medium text-slate-300">Tiendanube (3.5%)</span>
+                            <span class="font-medium text-slate-300">Tiendanube</span>
                             <strong id="ganTN" class="text-teal-300 text-sm font-bold">$0.00</strong>
                         </div>
                         <div class="flex justify-between items-center p-3 rounded-2xl glass-card-sm border-slate-800/80">
-                            <span class="font-medium text-slate-300">Mercado Libre (14%)</span>
+                            <span class="font-medium text-slate-300">Mercado Libre</span>
                             <strong id="ganML" class="text-amber-300 text-sm font-bold">$0.00</strong>
                         </div>
                     </div>
@@ -271,13 +284,17 @@
                         <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
                             <i class="fa-solid fa-bookmark text-amber-400"></i> Productos Guardados
                         </h3>
+                        <div class="flex gap-2">
+                        <button onclick="exportarJSON()" class="text-[10px] bg-slate-700 px-2 py-1 rounded-lg" type="button">Respaldo JSON</button>
+                        <label class="text-[10px] bg-slate-700 px-2 py-1 rounded-lg cursor-pointer">Importar JSON<input type="file" id="importarJson" accept="application/json,.json" class="hidden" onchange="importarJSON(event)"></label>
                         <button onclick="exportarCSV()" class="btn-glow btn-glow-amber text-[11px] bg-amber-600/90 hover:bg-amber-500 px-3 py-1.5 rounded-xl text-slate-950 font-extrabold transition flex items-center gap-1.5 shadow-md">
                             <i class="fa-solid fa-file-excel"></i> Exportar CSV
                         </button>
+                        </div>
                     </div>
 
                     <div class="flex gap-2">
-                        <input type="text" id="nombreProdGuardar" placeholder="Nombre del producto..." class="p-3 rounded-xl input-style text-xs flex-1">
+                        <input type="text" id="nombreProdGuardar" aria-label="Nombre del producto para guardar" placeholder="Nombre del producto..." class="p-3 rounded-xl input-style text-xs flex-1">
                         <button onclick="guardarProducto()" class="btn-glow px-4 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-xs transition text-white">Guardar</button>
                     </div>
                     <div id="listaGuardados" class="space-y-2 max-h-36 overflow-y-auto pt-1">
@@ -330,6 +347,13 @@
             catch { return []; }
         }
 
+        function marcarCotizacionManual() { document.getElementById('estadoCotizacion').textContent = 'Cotización ingresada manualmente; verificá la fuente y la fecha.'; }
+        function redondearPrecio(precio, modo) {
+            const n = Number(modo); if (!n) return precio;
+            if (n === 99 || n === 90) { const base = Math.floor(precio / 100) * 100; const candidato = base + n; return candidato >= precio ? candidato : base + 100 + n; }
+            return Math.ceil(precio / n) * n;
+        }
+
         function toggleUsd() {
             const isUsd = document.getElementById('checkUsd').checked;
             document.getElementById('divCotizacion').classList.toggle('hidden', !isUsd);
@@ -341,9 +365,12 @@
         async function obtenerDolarEnVivo() {
             try {
                 const res = await fetch('https://dolarapi.com/v1/dolares/blue');
+                if (!res.ok) throw new Error('Respuesta no disponible');
                 const data = await res.json();
                 if(data && data.venta) {
                     document.getElementById('cotizacionUsd').value = data.venta;
+                    const fecha = data.fechaActualizacion ? new Date(data.fechaActualizacion).toLocaleString('es-AR') : 'fecha no informada';
+                    document.getElementById('estadoCotizacion').textContent = `Dólar blue venta: actualizado ${fecha} (referencia).`;
                     calcular();
                 }
             } catch(e) {
@@ -362,10 +389,16 @@
             const fijosMensuales = leerNumero('costosFijosMensuales');
             const ventasMensuales = Math.max(1, leerNumero('ventasEstimadas', 1));
             const descPct = leerNumero('descSimulado');
+            const impuestosPct = leerNumero('impuestosPct');
+            const cargoPct = leerNumero('cargoCobroPct');
+            const comisionDirecta = leerNumero('canalDirectoPct');
+            const comisionTN = leerNumero('canalTNPct');
+            const comisionML = leerNumero('canalMLPct');
+            const envioReal = document.getElementById('envioVendedor').checked ? envio : 0;
             const error = document.getElementById('mensajeErrorCalculo');
-            const divisor = 1 - ((comisionPct + margenPct) / 100);
-            if (![cotiz, costoInput, comisionPct, envio, margenPct, fijosMensuales, ventasMensuales, descPct].every(Number.isFinite) || comisionPct > 100 || margenPct > 100 || descPct > 100 || (isUsd && cotiz <= 0) || divisor <= 0) {
-                error.textContent = divisor <= 0 ? 'La comisión más el margen debe ser menor al 100% para calcular un precio válido.' : 'Revisá los valores: ingresá números válidos no negativos, porcentajes menores a 100 y cotización mayor que cero.';
+            const divisor = 1 - ((comisionPct + impuestosPct + cargoPct + margenPct) / 100);
+            if (![cotiz, costoInput, comisionPct, envio, margenPct, fijosMensuales, ventasMensuales, descPct, impuestosPct, cargoPct, comisionDirecta, comisionTN, comisionML].every(Number.isFinite) || [comisionPct,margenPct,descPct,impuestosPct,cargoPct,comisionDirecta,comisionTN,comisionML].some(v => v > 100) || (isUsd && cotiz <= 0) || divisor <= 0) {
+                error.textContent = divisor <= 0 ? 'La suma de comisión, impuestos, otros cargos y margen debe ser menor al 100% para calcular un precio válido.' : 'Revisá los valores: ingresá números válidos no negativos, porcentajes menores a 100 y cotización mayor que cero.';
                 error.classList.remove('hidden');
                 ['resPrecioVenta','resGananciaNeta','resCostoTotal','resPrecioPromo','ganDirecta','ganTN','ganML'].forEach(id => document.getElementById(id).textContent = '—');
                 document.getElementById('incidenciaFijos').textContent = '—';
@@ -377,29 +410,37 @@
             error.classList.add('hidden');
             const fijosPorUnidad = fijosMensuales / ventasMensuales;
             document.getElementById('incidenciaFijos').innerText = formatoMoneda(fijosPorUnidad);
-            const costoBaseTotal = costoProd + envio + fijosPorUnidad;
+            const costoBaseTotal = costoProd + envioReal + fijosPorUnidad;
             const precioVenta = costoBaseTotal / divisor;
             const comisionMonto = precioVenta * (comisionPct / 100);
-            const gananciaNeta = precioVenta - costoBaseTotal - comisionMonto;
+            const impuestosMonto = precioVenta * (impuestosPct / 100);
+            const cargoMonto = precioVenta * (cargoPct / 100);
+            const gananciaNeta = precioVenta - costoBaseTotal - comisionMonto - impuestosMonto - cargoMonto;
             // El punto de equilibrio usa la contribución por unidad antes de asignar costos fijos.
-            const contribucionUnitaria = precioVenta - costoProd - envio - comisionMonto;
+            const contribucionUnitaria = precioVenta - costoProd - envioReal - comisionMonto - impuestosMonto - cargoMonto;
             const peUnidades = contribucionUnitaria > 0 ? Math.ceil(fijosMensuales / contribucionUnitaria) : (fijosMensuales === 0 ? 0 : null);
             document.getElementById('puntoEquilibrio').innerText = peUnidades === null ? 'No alcanzable' : `${peUnidades} unid.`;
-            const roi = costoBaseTotal > 0 ? ((gananciaNeta / costoBaseTotal) * 100) : 0;
+            const precioBaseRedondeado = redondearPrecio(costoBaseTotal / divisor, document.getElementById('redondeoPrecio').value);
+            const precioVentaFinal = precioBaseRedondeado;
+            const gananciaFinal = precioVentaFinal - costoBaseTotal - precioVentaFinal * ((comisionPct + impuestosPct + cargoPct) / 100);
+            const precioPromo = precioVentaFinal * (1 - (descPct / 100));
+            const gananciaPromo = precioPromo - costoBaseTotal - precioPromo * ((comisionPct + impuestosPct + cargoPct) / 100);
+            const roi = costoBaseTotal > 0 ? ((gananciaFinal / costoBaseTotal) * 100) : 0;
             document.getElementById('badgeRoi').innerText = `ROI: ${roi.toFixed(1)}%`;
-            const precioPromo = precioVenta * (1 - (descPct / 100));
-            document.getElementById('resPrecioVenta').innerText = formatoMoneda(precioVenta);
-            document.getElementById('resGananciaNeta').innerText = formatoMoneda(gananciaNeta);
-            document.getElementById('resCostoTotal').innerText = formatoMoneda(costoBaseTotal + comisionMonto);
+            document.getElementById('resPrecioVenta').innerText = formatoMoneda(precioVentaFinal);
+            document.getElementById('resGananciaNeta').innerText = formatoMoneda(gananciaFinal);
+            document.getElementById('resCostoTotal').innerText = formatoMoneda(precioVentaFinal - gananciaFinal);
+            document.getElementById('gananciaPromo').textContent = `Ganancia con promo: ${formatoMoneda(gananciaPromo)}${gananciaPromo < 0 ? ' — ¡vendés a pérdida!' : ''}`;
+            document.getElementById('gananciaPromo').className = `block text-[10px] ${gananciaPromo < 0 ? 'text-rose-300 font-bold' : 'text-slate-300'}`;
             document.getElementById('resPrecioPromo').innerText = formatoMoneda(precioPromo);
             const cardGanancia = document.getElementById('cardGanancia');
             if (margenPct < 15) cardGanancia.className = 'p-4 rounded-2xl border glass-card-sm border-rose-500/40 bg-rose-950/20';
             else if (margenPct < 30) cardGanancia.className = 'p-4 rounded-2xl border glass-card-sm border-amber-500/40 bg-amber-950/20';
             else cardGanancia.className = 'p-4 rounded-2xl border glass-card-sm border-emerald-500/40 bg-emerald-950/20';
-            document.getElementById('ganDirecta').innerText = formatoMoneda(precioVenta - costoBaseTotal);
-            document.getElementById('ganTN').innerText = formatoMoneda(precioVenta - costoBaseTotal - (precioVenta * 0.035));
-            document.getElementById('ganML').innerText = formatoMoneda(precioVenta - costoBaseTotal - (precioVenta * 0.14));
-            actualizarGrafico(costoProd, envio + fijosPorUnidad, comisionMonto, gananciaNeta);
+            document.getElementById('ganDirecta').innerText = formatoMoneda(precioVentaFinal - costoBaseTotal - precioVentaFinal * ((comisionDirecta + impuestosPct + cargoPct) / 100));
+            document.getElementById('ganTN').innerText = formatoMoneda(precioVentaFinal - costoBaseTotal - precioVentaFinal * ((comisionTN + impuestosPct + cargoPct) / 100));
+            document.getElementById('ganML').innerText = formatoMoneda(precioVentaFinal - costoBaseTotal - precioVentaFinal * ((comisionML + impuestosPct + cargoPct) / 100));
+            actualizarGrafico(costoProd, envioReal + fijosPorUnidad, comisionMonto + impuestosMonto + cargoMonto, gananciaFinal);
         }
 
         function setComision(val) { document.getElementById('comisionPlataforma').value = val; calcular(); }
@@ -432,7 +473,7 @@
             const ganancia = document.getElementById('resGananciaNeta').innerText;
             const promo = document.getElementById('resPrecioPromo').innerText;
             
-            const texto = `📊 *Cotización de Producto*\n• Precio Venta: ${precio}\n• Ganancia Neta: ${ganancia}\n• Precio Promocional: ${promo}`;
+            const texto = `📊 *Cotización de Producto*\n• Precio Venta: ${precio}\n• Ganancia Neta: ${ganancia}\n• Precio Promocional: ${promo}\n• Ganancia con promo: ${document.getElementById('gananciaPromo').innerText}`;
             if (navigator.clipboard) navigator.clipboard.writeText(texto).then(() => alert("¡Resumen copiado para WhatsApp!")).catch(() => alert("No se pudo copiar automáticamente. Probá desde una página segura (HTTPS).")); else alert("El navegador no habilitó el portapapeles. Abrí la página con HTTPS o copiá el resumen manualmente.");
         }
 
@@ -450,7 +491,9 @@
                 comision: document.getElementById('comisionPlataforma').value, envio: document.getElementById('gastosEnvio').value,
                 margen: document.getElementById('margenDeseado').value, usd: document.getElementById('checkUsd').checked,
                 cotizacion: document.getElementById('cotizacionUsd').value, fijos: document.getElementById('costosFijosMensuales').value,
-                ventas: document.getElementById('ventasEstimadas').value, descuento: document.getElementById('descSimulado').value
+                ventas: document.getElementById('ventasEstimadas').value, descuento: document.getElementById('descSimulado').value,
+                impuestos: document.getElementById('impuestosPct').value, cargo: document.getElementById('cargoCobroPct').value, redondeo: document.getElementById('redondeoPrecio').value,
+                envioVendedor: document.getElementById('envioVendedor').checked, directa: document.getElementById('canalDirectoPct').value, tn: document.getElementById('canalTNPct').value, ml: document.getElementById('canalMLPct').value
             };
             const guardados = leerGuardados(); guardados.push(item);
             localStorage.setItem('prods_guardados', JSON.stringify(guardados));
@@ -469,6 +512,8 @@
             if (p.fijos !== undefined) document.getElementById('costosFijosMensuales').value = p.fijos;
             if (p.ventas !== undefined) document.getElementById('ventasEstimadas').value = p.ventas;
             if (p.descuento !== undefined) document.getElementById('descSimulado').value = p.descuento;
+            for (const [key,id] of [['impuestos','impuestosPct'],['cargo','cargoCobroPct'],['redondeo','redondeoPrecio'],['directa','canalDirectoPct'],['tn','canalTNPct'],['ml','canalMLPct']]) if (p[key] !== undefined) document.getElementById(id).value = p[key];
+            if (p.envioVendedor !== undefined) document.getElementById('envioVendedor').checked = p.envioVendedor;
             calcular();
         }
         function borrarProducto(index) {
@@ -486,11 +531,27 @@
                 row.append(title, del); cont.appendChild(row);
             });
         }
+        function exportarJSON() {
+            const contenido = JSON.stringify({version:1, exportado:new Date().toISOString(), productos:leerGuardados()}, null, 2);
+            const url = URL.createObjectURL(new Blob([contenido], {type:'application/json'}));
+            const a = document.createElement('a'); a.href = url; a.download = 'respaldo_calculadora.json'; a.click(); URL.revokeObjectURL(url);
+        }
+        async function importarJSON(event) {
+            const archivo = event.target.files?.[0]; if (!archivo) return;
+            try {
+                const data = JSON.parse(await archivo.text()); const lista = Array.isArray(data) ? data : data.productos;
+                if (!Array.isArray(lista) || lista.some(p => !p || typeof p.nombre !== 'string')) throw new Error('Formato inválido');
+                const existente = leerGuardados(); localStorage.setItem('prods_guardados', JSON.stringify([...existente, ...lista])); renderGuardados();
+                alert(`Se importaron ${lista.length} productos.`);
+            } catch { alert('No se pudo importar: el archivo no tiene el formato de respaldo esperado.'); }
+            event.target.value = '';
+        }
+
         function exportarCSV() {
             const guardados = leerGuardados();
             if (!guardados.length) return alert('No hay productos guardados para exportar.');
             const campo = v => `"${String(v ?? '').replaceAll('"', '""')}"`;
-            const filas = [['Producto','Costo','Comision (%)','Envio','Margen (%)','Moneda USD','Cotizacion','Costos fijos','Ventas estimadas'], ...guardados.map(p => [p.nombre,p.costo,p.comision,p.envio,p.margen,p.usd ? 'Sí' : 'No',p.cotizacion,p.fijos,p.ventas])];
+            const filas = [['Producto','Costo','Comision (%)','Envio','Margen (%)','Moneda USD','Cotizacion','Costos fijos','Ventas estimadas','Impuestos (%)','Otros cargos (%)','Redondeo','Envío vendedor','Comisión directa','Comisión Tiendanube','Comisión ML'], ...guardados.map(p => [p.nombre,p.costo,p.comision,p.envio,p.margen,p.usd ? 'Sí' : 'No',p.cotizacion,p.fijos,p.ventas,p.impuestos,p.cargo,p.redondeo,p.envioVendedor ? 'Sí' : 'No',p.directa,p.tn,p.ml])];
             const csv = '\uFEFF' + filas.map(f => f.map(campo).join(';')).join('\r\n');
             const url = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'}));
             const link = document.createElement('a'); link.href = url; link.download = 'catalogo_productos.csv'; link.click(); URL.revokeObjectURL(url);
